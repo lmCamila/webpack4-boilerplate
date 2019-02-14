@@ -127,7 +127,7 @@ body{
     flex-flow: row wrap;
     justify-content: space-around;
     height: 3%;
-    padding: 12px;
+    padding: 15px;
     border-bottom: 1px solid rgba(7, 7, 7, 0.192);
 }
 .contact img{
@@ -135,6 +135,10 @@ body{
 }
 .div-right{
     margin-top: 5.3%;
+    width: 325px;
+}
+.div-name{
+    width: 315px;
 }
 .pagination{
     display: flex;
@@ -169,6 +173,42 @@ body{
     font-family: 'Assistant', sans-serif;
     background: linear-gradient(rgba(148, 145, 145, 0.7),rgba(158, 157, 157, 0.7)),url("images/background.jpg");
 }
+#modal-coment{
+    display: none;
+    position: fixed;
+    z-index: 1;
+    top:1%;
+    left: 20%;
+    width: 60%;
+    height: 47%;
+    overflow: auto;
+    font-family: 'Assistant', sans-serif;
+    background: linear-gradient(rgba(148, 145, 145, 0.7),rgba(158, 157, 157, 0.7)),url("images/background.jpg");
+}
+.close-coments{
+    display: inline-block;
+    position: fixed;
+    color:rgba(32, 2, 2, 0.973);
+    font-size: 28px;
+    float: right;
+    top:3%;
+    right: 23%;
+    font-weight: bold;
+}
+.layout-coments{
+    width: 80%;
+    background: rgba(255,255,255,0.8);
+    margin: 2% 10% 2% 10%;
+    padding: 2% 0% 0% 0%;
+}
+.layout-coments p{
+   padding: 0% 5% 5% 5%;
+
+}
+.layout-coments h3{
+    padding-left: 2%;
+ 
+ }
 .close{
     display: inline-block;
     position: fixed;
@@ -179,8 +219,15 @@ body{
     right: 13%;
     font-weight: bold;
 }
+
 .close:hover,
 .close:focus{
+    text-decoration: none;
+    color:rgba(241, 14, 14, 0.932);
+    cursor:pointer;
+}
+.close-coments:hover,
+.close-coments:focus{
     text-decoration: none;
     color:rgba(241, 14, 14, 0.932);
     cursor:pointer;
@@ -235,7 +282,7 @@ body{
      background-color: #FFFFFF;
  }
  .btn-fav img{
-    width: 50%;
+    width: 20px;
  }
  .btn-fav:hover{
     border:none;
@@ -260,6 +307,13 @@ body{
         border-radius: 5px;
         padding:4px;
     }
+    .edit-exclude{ 
+        display: flex;
+        flex-flow: row wrap;
+        margin-left: 50%;
+        transition: 1s background-color;
+    }
+    
 }
 #btn-search{
     border:none;
@@ -268,8 +322,34 @@ body{
     cursor: pointer;
 }
 #btn-search:hover{
-    background: rgba(135, 136, 139, 0.8)
+    background: rgba(135, 136, 139, 0.8);
 }
+.btn-coments{
+    border:none;
+    height: 30px;
+    border-radius: 10px;
+    background: rgba(255,255,255,0.8);
+    box-shadow:0px 4px 8px 0px rgba(7, 7, 7, 0.192);
+    cursor: pointer;
+}
+.btn-coments:hover{
+    background: rgba(135, 136, 139, 0.8);
+}
+.btn-coments img{
+    width: 20px;
+    padding:1%;
+}
+.coments{
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+    justify-content: flex-start;
+    margin-top: -5%;
+}
+.coments p{
+    padding-right: 10px;
+}
+
 .search{
     display: flex;
     padding:2% 2% 0% 0%;
@@ -302,9 +382,11 @@ footer{
 .btn-white:hover{
     background-color: rgba(168, 155, 155, 0.7);
 }
-.edit-exclude{
-    margin-top:-7%;
-    margin-left: 80%;
+.edit-exclude{ 
+    display: flex;
+    flex-direction: column;
+    margin-top: 0%;
+    margin-left: 0%;
     transition: 1s background-color;
 }
 
@@ -318,7 +400,7 @@ footer{
     transition: 1s background-color;
 }
 .btn-edit-exclude img{
-    width: 40%;
+    width: 20px;
 }
 .btn-edit-exclude:hover{
     background-color: rgba(168, 155, 155, 0.7);
@@ -358,11 +440,29 @@ footer{
         bottom: 1%;
         right: 1%;
     }
-    .edit-exclude{
-        margin-top:-5%;
-        margin-left: 65%;
+}
+@media screen and (max-width: 940px){
+    .edit-exclude{ 
+        display: flex;
+        flex-flow: row wrap;
+        margin-left: 50%;
+        transition: 1s background-color;
     }
-
+}
+@media screen and (max-width: 875px){
+    .div-right{
+        margin-top:0%;
+        width: 325px;
+    }
+    .contact{
+        display: flex;
+        flex-flow: column wrap;
+        justify-content:center;
+        height: 5%;
+        padding: 2px;
+        border-bottom: 1px solid rgba(7, 7, 7, 0.192);
+        
+    }
 }
 @media screen and (max-width: 699px){
     .list{
@@ -384,8 +484,8 @@ footer{
         display: flex;
         flex-flow: column wrap;
         justify-content:center;
-        height: 3%;
-        padding: 12px;
+        height: 7%;
+        padding: 15px;
         border-bottom: 1px solid rgba(7, 7, 7, 0.192);
     }
     footer{
@@ -396,8 +496,14 @@ footer{
         right: 1%;
     }
     .edit-exclude{
-        margin-top:-15%;
-        margin-left: 65%;
+        margin-top:-25%;
+        margin-left: 50%;
+    }
+    .div-right{
+        margin-top:0%;
+        width: 325px;
+        padding-bottom: 3%;
+        margin-bottom:2%;
     }
    
 }

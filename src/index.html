@@ -39,7 +39,7 @@
         </nav>
     </header>
     <section class="contacts">
-        <div class="list">
+        <div id="listContact" class="list">
             <div class="filter">
                 <label for="filter-fav">Filtrar por:</label>
                 <select name="filter-fav">
@@ -47,33 +47,7 @@
                     <option value="favorites">favoritos</option>
                 </select>
             </div>
-            <div class="contact" data-id="vNypw3EKd9cuKHu7">
-                <div>
-                    <img src="https://s3.amazonaws.com/uifaces/faces/twitter/terpimost/128.jpg" />
-                </div>
-                <div>
-                    <h3>Nome + Sobrenome</h3>
-                    <p>E-mail: teste@teste.com</p>
-                    <p>Endereço: 4974 Pedro Travessa</p>
-                    <p>Telefone: (23) 9147-2363</p>
-                </div>
-                <div class="div-right">
-                    <p>Genero: m</p>
-                    <p>Empresa: Silva - Franco</p>
-                    <p>Coments:</p>
-                </div>
-                <div class="fav">
-                    <!--<label for="fav">Favorito</label>
-                    <input type="checkbox" value="favorito" name="fav">-->
-                    <button class="btn-fav"><img src="images/favorite_border.svg" /></button>
-                </div>
-                <div class="edit-exclude">
-                    <button id="btn-edit" class="btn-edit-exclude"><img src="images/baseline-edit-24px.svg"
-                            alt=""></button>
-                    <button id="btn-exclude" class="btn-edit-exclude"><img src="images/round-delete_outline-24px.svg"
-                            alt=""></button>
-                </div>
-            </div>
+            
         </div>
         <div class="pagination">
             <ul>
@@ -97,19 +71,19 @@
                     <div>
                         <label for="firstName">Nome:</label>
                         <div class="input-contact">
-                            <input type="text" name="firstName" />
+                            <input type="text" name="firstName" id="firstName" />
                         </div>
                     </div>
                     <div>
                         <label for="lastName">Sobrenome:</label>
                         <div class="input-contact">
-                            <input type="text" name="lastName" />
+                            <input type="text" name="lastName" id="lastName"/>
                         </div>
                     </div>
                     <div>
                         <label for="email">Email:</label>
                         <div class="input-contact">
-                            <input type="email" name="email" />
+                            <input type="email" name="email" id="email"/>
                         </div>
                     </div>
                     <div>
@@ -117,7 +91,7 @@
                         <div>
                             <input class="radio" type="radio" name="gender" value="m" id="cMasc" /><label
                                 for="cMasc">Masculino</label>
-                            <input class="radio" type="radio" name="gender" value="f" id="cFem" /><label
+                            <input class="radio" type="radio" name="gender" value="f" id="cFem" checked="yes"/><label
                                 for="cFem">Feminino</label>
                         </div>
                     </div>
@@ -130,31 +104,52 @@
                     <div>
                         <label for="company">Empresa:</label>
                         <div class="input-contact">
-                            <input type="text" name="company" />
+                            <input type="text" name="company" id="company"/>
                         </div>
                     </div>
                     <div>
                         <label for="address">Endereço:</label>
                         <div class="input-contact">
-                            <input type="text" name="address" />
+                            <input type="text" name="address" id="address"/>
                         </div>
                     </div>
                     <div>
                         <label for="phone">Telefone:</label>
                         <div class="input-contact">
-                            <input type="tel" name="phone" />
+                            <input type="tel" name="phone" id="phone" />
                         </div>
                     </div>
                     <div>
                         <label>Comentários:</label>
                         <div class="input-contact">
-                            <textarea name="coment" rows="4"></textarea>
+                            <textarea name="coment" rows="4" id="comment"></textarea>
                         </div>
                     </div>
                     <div id="btn-submit">
                         <input type="submit" value="Enviar">
                     </div>
                 </form>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div id="modal-coment">
+            <span class="close-coments">&times;</span>
+            <div class="layout-coments">
+                <h3>Comentários:</h3>
+                <p>yellow Handcrafted Wooden Pizza Avon Analyst Product Pa'anga Team-oriented Refined
+                    structure
+                    Cambridgeshire Dynamic Trail Director back-end Multi-channelled Gardens compress Practical synergies
+                    Baby Administrator Consultant Summit infrastructures viral Indiana sticky architect static
+                    Handcrafted
+                    Cotton Ball Summit web-readiness Consultant Investment Account standardization Intelligent Frozen
+                    Ball
+                    Cliff target Regional Senior TCP Cape program Rustic Fresh Tuna Re-contextualized Marketing incubate
+                    THX
+                    Trinidad and Tobago Handcrafted Wooden Keyboard attitude override Ports back up viral Administrator
+                    Valleys Fantastic Concrete Keyboard Industrial & Electronics firmware New Taiwan Dollar Money Market
+                    Account Lead Intelligent Fresh Gloves quantify Way Djibouti Franc CSS engage Tasty Frozen Sausages
+                    California Personal Loan Account Malaysian </p>
             </div>
         </div>
     </section>
