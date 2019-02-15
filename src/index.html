@@ -47,12 +47,11 @@
                     <option value="favorites">favoritos</option>
                 </select>
             </div>
-            
         </div>
         <div class="pagination">
             <ul>
-                <li><a href=""><img src="images/round-arrow_back_ios-24px.svg" /></a></li>
-                <li><a href=""><img src="images/round-arrow_forward_ios-24px.svg" /></a></li>
+                <li id="back"><img src="images/round-arrow_back_ios-24px.svg" /></li>
+                <li id="forward"><img src="images/round-arrow_forward_ios-24px.svg" /></li>
             </ul>
         </div>
     </section>
@@ -60,7 +59,7 @@
         <div id="modal-add-edit">
             <span class="close">&times;</span>
             <div class="new-contact">
-                <form id="form-new-edit"action="#">
+                <form id="form-new-edit" action="#">
                     <h1 id="new-title">Novo contato</h1>
                     <div>
                         <label for="firstName">Nome:</label>
@@ -71,13 +70,13 @@
                     <div>
                         <label for="lastName">Sobrenome:</label>
                         <div class="input-contact">
-                            <input type="text" name="lastName" id="lastName"/>
+                            <input type="text" name="lastName" id="lastName" />
                         </div>
                     </div>
                     <div>
                         <label for="email">Email:</label>
                         <div class="input-contact">
-                            <input type="email" name="email" id="email"/>
+                            <input type="email" name="email" id="email" />
                         </div>
                     </div>
                     <div>
@@ -85,7 +84,7 @@
                         <div>
                             <input class="radio" type="radio" name="gender" value="m" id="cMasc" /><label
                                 for="cMasc">Masculino</label>
-                            <input class="radio" type="radio" name="gender" value="f" id="cFem" checked="yes"/><label
+                            <input class="radio" type="radio" name="gender" value="f" id="cFem" checked="yes" /><label
                                 for="cFem">Feminino</label>
                         </div>
                     </div>
@@ -98,13 +97,13 @@
                     <div>
                         <label for="company">Empresa:</label>
                         <div class="input-contact">
-                            <input type="text" name="company" id="company"/>
+                            <input type="text" name="company" id="company" />
                         </div>
                     </div>
                     <div>
                         <label for="address">Endereço:</label>
                         <div class="input-contact">
-                            <input type="text" name="address" id="address"/>
+                            <input type="text" name="address" id="address" />
                         </div>
                     </div>
                     <div>
