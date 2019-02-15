@@ -2,46 +2,49 @@ import './index.css';
 import './js/view.js';
 
 const listContact = document.getElementById('listContact');
-console.log(listContact)
+const initialPages = [1, 2, 3, 4, 5, 6]
 async function loadContacts() {
     const response = await fetch('http://contacts-api.azurewebsites.net/api/contacts');
     return response.json();
 }
 
 loadContacts().then(res => {
-    for (let i = 0; i < 11; i++) {
+    pagination(res)
+    for (let i = 0; i < 10; i++) {
         montaContato(res[i])
         addHover(res[i].id, res[i].isFavorite)
-        addClick(res[i])
+        addEventDeletar(res[i])
+        addEventEditar(res[i])
+        addEventComments(res[i])
     }
 
 }).catch(err => console.log(err));
 
 function montaContato(contato) {
     //componente de div coment
-    let btnComents = creatComponents('button', 'src/images/more.svg', 'btn-coments', 'btn-coments' + contato.id)
+    let btnComents = createComponents('button', 'src/images/more.svg', 'btn-coments', 'btn-coments' + contato.id)
     //componentes de div edit-exclude
-    let btnfav = contato.isFavorite ? creatComponents('button', 'src/images/favorite.svg', 'btn-fav', 'btn-fav' + contato.id) : creatComponents('button', 'src/images/favorite_border.svg', 'btn-fav', 'btn-fav' + contato.id)
+    let btnfav = contato.isFavorite ? createComponents('button', 'src/images/favorite.svg', 'btn-fav', 'btn-fav' + contato.id) : createComponents('button', 'src/images/favorite_border.svg', 'btn-fav', 'btn-fav' + contato.id)
 
-    let btnedit = creatComponents('button', 'src/images/baseline-edit-24px.svg', 'btn-edit-exclude', 'btn-edit' + contato.id)
-    let btnexc = creatComponents('button', 'src/images/round-delete_outline-24px.svg', 'btn-edit-exclude', 'btn-exclude' + contato.id)
+    let btnedit = createComponents('button', 'src/images/baseline-edit-24px.svg', 'btn-edit-exclude', 'btn-edit' + contato.id)
+    let btnexc = createComponents('button', 'src/images/round-delete_outline-24px.svg', 'btn-edit-exclude', 'btn-exclude' + contato.id)
 
     //divs
     let imgAvatar = contato.info.avatar != null ? contato.info.avatar : 'src/images/avatar-images.jpg'
-    let divImg = createDivs('div-img', creatComponents('img',imgAvatar))
-    let divNome = createDivs('div-name', creatComponents('h3', contato.firstName + " " + contato.lastName),
-        creatComponents('p', 'Email: ' + contato.email), creatComponents('p', 'Endereço: ' + contato.info.address),
-        creatComponents('p', 'Telefone: ' + contato.info.phone))
-    let divComents = createDivs('coments', creatComponents('p', 'Coments: '), btnComents)
-    let divInfos = createDivs('div-right', creatComponents('p', 'Genero: ' + contato.gender),
-        creatComponents('p', 'Empresa: ' + contato.info.company), divComents)
+    let divImg = createDivs('div-img', createComponents('img', imgAvatar))
+    let divNome = createDivs('div-name', createComponents('h3', contato.firstName + " " + contato.lastName),
+        createComponents('p', 'Email: ' + contato.email), createComponents('p', 'Endereço: ' + contato.info.address),
+        createComponents('p', 'Telefone: ' + contato.info.phone))
+    let divComents = createDivs('coments', createComponents('p', 'Coments: '), btnComents)
+    let divInfos = createDivs('div-right', createComponents('p', 'Genero: ' + contato.gender),
+        createComponents('p', 'Empresa: ' + contato.info.company), divComents)
     let divEditExclude = createDivs('edit-exclude', btnfav, btnedit, btnexc)
     let divContacts = createDivs('contact', divImg, divNome, divInfos, divEditExclude)
     divContacts.setAttribute('data', contato.id)
     listContact.appendChild(divContacts)
 }
 
-function creatComponents(element, conteudo, classe = 'undefined', id = 'undefined') {
+function createComponents(element, conteudo, classe = 'undefined', id = 'undefined') {
     let elemento = document.createElement(element)
     if (classe != 'undefined') {
         elemento.classList.add(classe)
@@ -95,25 +98,41 @@ function addHover(idContato, isFav) {
     }
 }
 
-function addClick(contato){
-//deletar
-let btnExclude = document.getElementById('btn-exclude'+contato.id);
-btnExclude.onclick = ()=>{
-    confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`);
+function addEventDeletar(contato) {
+    //deletar
+    let btnExclude = document.getElementById('btn-exclude' + contato.id);
+    btnExclude.onclick = (event) => {
+        confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`);
+    }
 }
-//editar
-let modal = document.getElementById('modal-add-edit');
-let titulo = document.getElementById('new-title');
-let btnEdit = document.getElementById('btn-edit'+contato.id)
-btnEdit.onclick = ()=>{
-    modal.style.display = 'block';
-    titulo.textContent = 'Editar Contato';
-    completeForm(contato);
+function addEventEditar(contato) {
+    //editar
+    let modal = document.getElementById('modal-add-edit');
+    let titulo = document.getElementById('new-title');
+    let btnEdit = document.getElementById('btn-edit' + contato.id)
+    btnEdit.onclick = (event) => {
+        modal.style.display = 'block';
+        titulo.textContent = 'Editar Contato';
+        completeForm(contato);
+    }
 }
-//favoritar
-}
+function addEventComments(contato) {
+    //comentarios
+    let modalComents = document.getElementById('modal-coment')
+    let btnComents = document.getElementById('btn-coments' + contato.id)
+    let spanComents = document.getElementsByClassName('close-coments')[0]
+    let paragraph = document.getElementById('comment-description')
+    btnComents.onclick = (event) => {
+        paragraph.textContent = contato.info.comments
+        modalComents.style.display = 'block'
 
-function completeForm(contato){
+    }
+    spanComents.onclick = (event) => {
+        modalComents.style.display = 'none'
+    }
+
+}
+function completeForm(contato) {
     let firstNameInput = document.getElementById('firstName')
     let lastNameInput = document.getElementById('lastName')
     let emailInput = document.getElementById('email')
@@ -126,9 +145,25 @@ function completeForm(contato){
     firstNameInput.value = contato.firstName
     lastNameInput.value = contato.lastName
     emailInput.value = contato.email
-    contato.gender == 'f' ? genFemInput.setAttribute('checked','yes') : genMascInput.setAttribute('checked','yes')
+    contato.gender == 'f' ? genFemInput.setAttribute('checked', 'yes') : genMascInput.setAttribute('checked', 'yes')
     empresaInput.value = contato.info.company
     enderecoInput.value = contato.info.address
     telefoneInput.value = contato.info.phone
     comentariosInput.value = contato.info.comments
 }
+
+function pagination(contatos) {
+    let pages = Math.floor(-contatos.length / 10) * (-1)
+    let lista = document.getElementsByTagName('ul')[0]
+    let itens = document.getElementsByTagName('li')
+
+    initialPages.forEach((element) => {
+        let item = createComponents('li', element,'page',element)
+        lista.insertBefore(item, itens[itens.length - 1])
+    })
+
+    let itensPage = contatos.slice(0,10)
+    console.log(itensPage)
+}
+
+
