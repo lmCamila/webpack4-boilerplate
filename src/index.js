@@ -1,24 +1,25 @@
 import './index.css';
 import './js/view.js';
-
-const listContact = document.getElementById('listContact');
-const initialPages = [1, 2, 3, 4, 5, 6]
-async function loadContacts() {
-    const response = await fetch('http://contacts-api.azurewebsites.net/api/contacts');
-    return response.json();
+const _ = require('lodash/array')
+window.state = {
+    pages: [],
+    currentPage: 1,
+    currentArray: 0,
+    contacts: [],
+    search: '',
+    filter: ''
 }
+const listContact = document.getElementById('listContact');
 
-loadContacts().then(res => {
-    pagination(res)
-    for (let i = 0; i < 10; i++) {
-        montaContato(res[i])
-        addHover(res[i].id, res[i].isFavorite)
-        addEventDeletar(res[i])
-        addEventEditar(res[i])
-        addEventComments(res[i])
+
+const loadContacts = async () => {
+    const response = await fetch('http://contacts-api.azurewebsites.net/api/contacts');
+    const data = await response.json();
+    window.state = {
+        ...window.state,
+        contacts: _.chunk(data, 10)
     }
-
-}).catch(err => console.log(err));
+}
 
 function montaContato(contato) {
     //componente de div coment
@@ -42,7 +43,12 @@ function montaContato(contato) {
     let divContacts = createDivs('contact', divImg, divNome, divInfos, divEditExclude)
     divContacts.setAttribute('data', contato.id)
     listContact.appendChild(divContacts)
+    addHover(contato.id, contato.isFavorite)
+    addEventDeletar(contato)
+    addEventEditar(contato)
+    addEventComments(contato)
 }
+
 
 function createComponents(element, conteudo, classe = 'undefined', id = 'undefined') {
     let elemento = document.createElement(element)
@@ -125,7 +131,6 @@ function addEventComments(contato) {
     btnComents.onclick = (event) => {
         paragraph.textContent = contato.info.comments
         modalComents.style.display = 'block'
-
     }
     spanComents.onclick = (event) => {
         modalComents.style.display = 'none'
@@ -152,18 +157,53 @@ function completeForm(contato) {
     comentariosInput.value = contato.info.comments
 }
 
-function pagination(contatos) {
-    let pages = Math.floor(-contatos.length / 10) * (-1)
+function createArrayPages() {
+    const { contacts } = window.state
+    let arrayPages = []
+    for (let i = 0; i < contacts.length; i++) {
+        arrayPages.push(i + 1)
+    }
+    window.state = {
+        ...window.state,
+        pages: _.chunk(arrayPages, 6)
+    }
+}
+function montarPaginacao() {
     let lista = document.getElementsByTagName('ul')[0]
     let itens = document.getElementsByTagName('li')
-
-    initialPages.forEach((element) => {
-        let item = createComponents('li', element,'page',element)
+    for (let i = 0; i < window.state.pages[window.state.currentArray].length; i++) {
+        let item = createComponents('li', window.state.pages[0][i],'page',window.state.pages[0][i])
         lista.insertBefore(item, itens[itens.length - 1])
-    })
-
-    let itensPage = contatos.slice(0,10)
-    console.log(itensPage)
+        addEventPaginacao(window.state.pages[0][i])
+    }
+}
+function addEventPaginacao(id){
+    let item = document.getElementById(id)
+    
+   
+    item.onclick = ()=>{
+        let contatos = document.getElementsByClassName('contact')
+        window.state={
+            ...window.state,
+            currentPage:item.textContent
+        }
+        for(let i=contatos.length -1 ; i>=0; i--){
+            contatos[i].remove();
+        }
+        
+        render()
+    }
+}
+function render() {
+    const { contacts, currentPage } = window.state
+    for (let i = 0; i < contacts[currentPage - 1].length; i++) {
+        montaContato(contacts[currentPage - 1][i])
+    }
 }
 
-
+loadContacts().then(() => {
+    
+    createArrayPages()
+    montarPaginacao()
+    render()
+})
