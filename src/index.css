@@ -221,7 +221,7 @@ body{
     font-weight: bold;
 }
 .currentPage{
-    background:rgba(148, 145, 145, 0.7);
+    background: #A9A9A9;
 }
 .close:hover,
 .close:focus{
