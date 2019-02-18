@@ -90,4 +90,3 @@ function calculateControl() {
     return (window.state.currentPage / array) / 6
 }
 
-
