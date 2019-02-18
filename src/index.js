@@ -171,10 +171,11 @@ function createArrayPages() {
 function montarPaginacao() {
     let lista = document.getElementsByTagName('ul')[0]
     let itens = document.getElementsByTagName('li')
+    console.log( window.state.pages[window.state.currentArray])
     for (let i = 0; i < window.state.pages[window.state.currentArray].length; i++) {
-        let item = createComponents('li', window.state.pages[0][i],'page',window.state.pages[0][i])
+        let item = createComponents('li', window.state.pages[window.state.currentArray][i],'page',window.state.pages[window.state.currentArray][i])
         lista.insertBefore(item, itens[itens.length - 1])
-        addEventPaginacao(window.state.pages[0][i])
+        addEventPaginacao(window.state.pages[window.state.currentArray][i])
     }
 }
 function addEventPaginacao(id){
@@ -182,18 +183,28 @@ function addEventPaginacao(id){
     
    
     item.onclick = ()=>{
-        let contatos = document.getElementsByClassName('contact')
+        
         window.state={
             ...window.state,
             currentPage:item.textContent
         }
-        for(let i=contatos.length -1 ; i>=0; i--){
-            contatos[i].remove();
-        }
-        
+        removeContactsList()
         render()
     }
 }
+function removeContactsList(){
+    let contatos = document.getElementsByClassName('contact')
+    for(let i=contatos.length -1 ; i>=0; i--){
+        contatos[i].remove();
+    }
+}
+function removePageList(){
+    let pages = document.getElementsByClassName('page')
+    for (let i = pages.length - 1; i >= 0; i--) {
+        pages[i].remove();
+    }
+}
+
 function render() {
     const { contacts, currentPage } = window.state
     for (let i = 0; i < contacts[currentPage - 1].length; i++) {
@@ -207,3 +218,5 @@ loadContacts().then(() => {
     montarPaginacao()
     render()
 })
+
+export{montarPaginacao,render,removeContactsList,removePageList}
