@@ -90,3 +90,8 @@ function calculateControl() {
     return (window.state.currentPage / array) / 6
 }
 
+let select = document.getElementsByTagName('select')
+//https://developer.mozilla.org/en-US/docs/Web/Events/change
+select.onclick=()=>{
+    console.log(select.selectedIndex)
+}
