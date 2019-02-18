@@ -171,7 +171,6 @@ function createArrayPages() {
 function montarPaginacao() {
     let lista = document.getElementsByTagName('ul')[0]
     let itens = document.getElementsByTagName('li')
-    console.log( window.state.pages[window.state.currentArray])
     for (let i = 0; i < window.state.pages[window.state.currentArray].length; i++) {
         let item = createComponents('li', window.state.pages[window.state.currentArray][i],'page',window.state.pages[window.state.currentArray][i])
         lista.insertBefore(item, itens[itens.length - 1])
@@ -213,7 +212,6 @@ function render() {
 }
 
 loadContacts().then(() => {
-    
     createArrayPages()
     montarPaginacao()
     render()

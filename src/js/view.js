@@ -17,45 +17,50 @@ let btnBack = document.getElementById('back')
 let btnForward = document.getElementById('forward')
 
 btnBack.onclick = () => {
-    console.log('back')
-    let control = (window.state.currentPage/window.state.currentArray) / 6
-    console.log(control)
-    if (window.state.currentPage == 1) {
-        window.state = {
-            ...window.state,
-            currentPage: window.state.currentPage
-        }
-    }else if (control <= 1) {
-        window.state = {
-            ...window.state,
-            currentPage: window.state.currentPage - 1
-        }
-        removeContactsList()
-        render()
-    } else if (control > 1) {
-        window.state = {
-            ...window.state,
-            currentPage: window.state.currentPage - 1,
-            currentArray: window.state.currentArray - 1
-        }
-        removeContactsList()
-        removePageList()
-        montarPaginacao()
-        render()
-    }
-}
-btnForward.onclick = () => {
-    let  page =window.state.currentPage + 1
+    let  page = 1
+    if(window.state.currentPage != 1){
+        page =window.state.currentPage - 1
+    } 
     window.state = {
         ...window.state,
         currentPage: page
     }
+    console.log(window.state.currentPage)
+    let control = (window.state.currentPage % 6)
+    
+   
+    if (control > 0) {
+        removeContactsList()
+        render()
+    } else if (control == 0) {
+        let array = window.state.currentArray - 1  
+        window.state = {
+            ...window.state,
+            currentArray:array
+        }
+        removeContactsList()
+        removePageList()
+        montarPaginacao()
+        render() 
+    }
+}
+btnForward.onclick = () => {
+    let  page = window.state.currentPage +1
+    if(page > window.state.contacts.length){
+        page = window.state.contacts.length
+    }
+    window.state = {
+        ...window.state,
+        currentPage: page
+    }
+   
     let control = calculateControl()
     if (control < 1) {
         removeContactsList()
         render()
     } else if (control >= 1) {
-        let array = window.state.currentArray + 1   
+        let array = window.state.currentArray + 1 
+      
         window.state = {
             ...window.state,
             currentArray:array
