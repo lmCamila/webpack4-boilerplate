@@ -121,5 +121,6 @@ function searchContacts(){
     let patern =`(${teste}\\B)`
     const contactsMatch = contacts.filter(c => new RegExp(patern,'i').test(c.firstName));
     console.log(contactsMatch)
+    //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Regular_Expressions
 }
 
