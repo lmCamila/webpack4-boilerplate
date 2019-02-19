@@ -1,4 +1,4 @@
-import { montarPaginacao, render, removeContactsList, removePageList } from '../index.js'
+import { montarPaginacao, render, removeContactsList, removePageList, createArrayPages } from '../index.js'
 import { isNullOrUndefined } from 'util';
 //botao novo
 let titulo = document.getElementById('new-title');
@@ -19,7 +19,6 @@ let btnForward = document.getElementById('forward')
 
 btnBack.onclick = () => {
     if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
-        console.log("funcionou")
         document.getElementById(window.state.currentPage).classList.remove('currentPage')
     }
     let page = 1
@@ -51,7 +50,6 @@ btnBack.onclick = () => {
 }
 btnForward.onclick = () => {
     if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
-        console.log("funcionou")
         document.getElementById(window.state.currentPage).classList.remove('currentPage')
     }
     let page = window.state.currentPage + 1
@@ -90,8 +88,38 @@ function calculateControl() {
     return (window.state.currentPage / array) / 6
 }
 
-let select = document.getElementsByTagName('select')
-//https://developer.mozilla.org/en-US/docs/Web/Events/change
-select.onclick=()=>{
-    console.log(select.selectedIndex)
+let select = document.getElementsByTagName('select')[0]
+select.onclick = () => {
+    if (select.selectedIndex == 0) {
+        window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
+        removeContactsList()
+        createArrayPages()
+        render()
+    } else if (select.selectedIndex == 1) {
+        window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
+        removeContactsList()
+        createArrayPages()
+        render()
+    }
 }
+
+function modifyFilterSelect() {
+    let option = localStorage.getItem('filter')
+    let options = document.getElementsByTagName('option')
+    if (option === 'none') {
+        options[0].setAttribute('selected', 'selected')
+    } else if (option === 'favorites') {
+        options[1].setAttribute('selected', 'selected')
+    }
+}
+
+export{modifyFilterSelect,searchContacts}
+
+function searchContacts(){
+    const {contacts,search} = window.state
+    let teste = 'Ami'
+    let patern =`(${teste}\\B)`
+    const contactsMatch = contacts.filter(c => new RegExp(patern,'i').test(c.firstName));
+    console.log(contactsMatch)
+}
+

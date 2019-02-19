@@ -1,11 +1,13 @@
 import './index.css';
-import './js/view.js';
+import {modifyFilterSelect, searchContacts} from './js/view.js';
+import { isNullOrUndefined } from 'util';
 const _ = require('lodash/array')
 window.state = {
     pages: [],
     currentPage: 1,
     currentArray: 0,
     contacts: [],
+    favs:[],
     search: '',
     filter: ''
 }
@@ -17,7 +19,8 @@ const loadContacts = async () => {
     const data = await response.json();
     window.state = {
         ...window.state,
-        contacts: _.chunk(data, 10)
+        contacts: data,
+        favs: _.chunk(data.filter(filterContacts),10)
     }
 }
 
@@ -107,7 +110,7 @@ function addHover(idContato, isFav) {
 function addEventDeletar(contato) {
     //deletar
     let btnExclude = document.getElementById('btn-exclude' + contato.id);
-    btnExclude.onclick = (event) => {
+    btnExclude.onclick = () => {
         confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`);
     }
 }
@@ -116,7 +119,7 @@ function addEventEditar(contato) {
     let modal = document.getElementById('modal-add-edit');
     let titulo = document.getElementById('new-title');
     let btnEdit = document.getElementById('btn-edit' + contato.id)
-    btnEdit.onclick = (event) => {
+    btnEdit.onclick = () => {
         modal.style.display = 'block';
         titulo.textContent = 'Editar Contato';
         completeForm(contato);
@@ -128,11 +131,11 @@ function addEventComments(contato) {
     let btnComents = document.getElementById('btn-coments' + contato.id)
     let spanComents = document.getElementsByClassName('close-coments')[0]
     let paragraph = document.getElementById('comment-description')
-    btnComents.onclick = (event) => {
+    btnComents.onclick = () => {
         paragraph.textContent = contato.info.comments
         modalComents.style.display = 'block'
     }
-    spanComents.onclick = (event) => {
+    spanComents.onclick = () => {
         modalComents.style.display = 'none'
     }
 
@@ -158,9 +161,10 @@ function completeForm(contato) {
 }
 
 function createArrayPages() {
-    const { contacts } = window.state
+    const { contacts,favs} = window.state
+    let listContact = localStorage.getItem('filter') ==='favorites'? favs : _.chunk(contacts, 10)
     let arrayPages = []
-    for (let i = 0; i < contacts.length; i++) {
+    for (let i = 0; i < listContact.length; i++) {
         arrayPages.push(i + 1)
     }
     window.state = {
@@ -182,13 +186,16 @@ function addEventPaginacao(id){
     
    
     item.onclick = ()=>{
-        
+        if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
+            document.getElementById(window.state.currentPage).classList.remove('currentPage')
+        }
         window.state={
             ...window.state,
             currentPage:item.textContent
         }
         removeContactsList()
         render()
+        document.getElementById(window.state.currentPage).classList.add('currentPage')
     }
 }
 function removeContactsList(){
@@ -205,16 +212,22 @@ function removePageList(){
 }
 
 function render() {
-    const { contacts, currentPage } = window.state
-    for (let i = 0; i < contacts[currentPage - 1].length; i++) {
-        montaContato(contacts[currentPage - 1][i])
+   
+    const { contacts,favs, currentPage } = window.state
+    let listContact = localStorage.getItem('filter') ==='favorites'? favs : _.chunk(contacts, 10)
+    for (let i = 0; i < listContact[currentPage - 1].length; i++) {
+        montaContato(listContact[currentPage - 1][i])
     }
+    modifyFilterSelect()
 }
-
+function filterContacts(obj){
+    return obj.isFavorite
+}
 loadContacts().then(() => {
     createArrayPages()
     montarPaginacao()
     render()
+    searchContacts()
 })
 
-export{montarPaginacao,render,removeContactsList,removePageList}
+export{montarPaginacao,render,removeContactsList,removePageList,createArrayPages}
