@@ -1,4 +1,4 @@
-import { montarPaginacao, render, removeContactsList, removePageList, createArrayPages } from '../index.js'
+import { montarPaginacao, render, removeContactsList, removePageList, createArrayPages, _ } from '../index.js'
 import { isNullOrUndefined } from 'util';
 //botao novo
 const titulo = document.getElementById('new-title');
@@ -53,10 +53,12 @@ btnForward.onclick = () => {
     if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
         document.getElementById(window.state.currentPage).classList.remove('currentPage')
     }
+    
     let page = parseInt(window.state.currentPage) + 1
-    if (page > window.state.contacts.length) {
-        page = window.state.contacts.length
+    if (page > _.chunk(window.state.contacts,10).length) {
+        page =_.chunk(window.state.contacts,10).length
     }
+   
     window.state = {
         ...window.state,
         currentPage: page
@@ -68,13 +70,11 @@ btnForward.onclick = () => {
         render()
     } else if (control > 1) {
         let array = window.state.currentArray + 1
-
+        console.log(array)
         window.state = {
             ...window.state,
             currentArray: array
         }
-        console.log(array)
-        console.log(control)
         removeContactsList()
         removePageList()
         montarPaginacao()

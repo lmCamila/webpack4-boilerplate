@@ -218,11 +218,9 @@ function removePageList() {
 }
 
 function render() {
-
     const { contacts, favs, currentPage, search } = window.state
     let listContacts = localStorage.getItem('filter') === 'favorites' ? favs : _.chunk(contacts, 10)
     listContacts = search != '' ? _.chunk(searchContacts(), 10) : listContacts
-   
     modifyFilterSelect()
     if (listContacts != null && listContacts.length != 0)  {
         for (let i = 0; i < listContacts[currentPage - 1].length; i++) {
@@ -247,8 +245,6 @@ loadContacts().then(() => {
     montarPaginacao()
     render()
     searchContacts()
-    console.log(window.state.contacts.length)
-
 })
 
-export { montarPaginacao, render, removeContactsList, removePageList, createArrayPages }
+export { montarPaginacao, render, removeContactsList, removePageList, createArrayPages, _ }
