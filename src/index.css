@@ -447,8 +447,9 @@ footer{
 @media screen and (max-width: 940px){
     .edit-exclude{ 
         display: flex;
-        flex-flow: row wrap;
-        margin-left: 50%;
+        flex-flow: column wrap;
+        margin-top:0%;
+        margin-left: 10%;
         transition: 1s background-color;
     }
 }
@@ -464,14 +465,20 @@ footer{
         height: 5%;
         padding: 2px;
         border-bottom: 1px solid rgba(7, 7, 7, 0.192);
-        
+    }
+    .edit-exclude{ 
+        display: flex;
+        flex-flow: row wrap;
+        margin-top:0%;
+        margin-left: 10%;
+        transition: 1s background-color;
     }
 }
 @media screen and (max-width: 699px){
     .list{
-        width: 75%;
+        width: 94%;
         background: rgba(255,255,255,0.8);
-        margin: 0% 13% 0% 15%;
+        margin: 0% 3% 0% 3%;
         box-shadow: rgba(10, 10, 10, 0.7);
     }
     .pagination{
@@ -499,8 +506,9 @@ footer{
         right: 1%;
     }
     .edit-exclude{
-        margin-top:-25%;
-        margin-left: 50%;
+        margin-top:0%;
+        margin-left: 25%;
+        height: 1%;
     }
     .div-right{
         margin-top:0%;
@@ -508,6 +516,7 @@ footer{
         padding-bottom: 3%;
         margin-bottom:2%;
     }
+    
    
 }
 

@@ -1,7 +1,7 @@
 /* eslint-disable func-style */
 import './index.css';
 import { modifyFilterSelect, searchContacts } from './js/view.js';
-import { isNullOrUndefined } from 'util';
+import { isNullOrUndefined, error } from 'util';
 const _ = require('lodash/array')
 window.state = {
     pages: [],
@@ -20,11 +20,11 @@ const loadContacts = async () => {
     const data = await response.json();
     window.state = {
         ...window.state,
-        contacts: data.sort((a,b)=>{
-            if(a.firstName > b.firstName){
+        contacts: data.sort((a, b) => {
+            if (a.firstName > b.firstName) {
                 return 1
             }
-            if(a.firstName < b.firstName){
+            if (a.firstName < b.firstName) {
                 return -1
             }
             return 0
@@ -33,12 +33,12 @@ const loadContacts = async () => {
     }
 }
 
-const montaContato =(contato)=> {
+const montaContato = (contato) => {
     //componente de div coment
     const btnComents = createComponents('button', 'src/images/more.svg', 'btn-coments', 'btn-coments' + contato.id)
     //componentes de div edit-exclude
     const btnfav = contato.isFavorite ? createComponents('button', 'src/images/favorite.svg', 'btn-fav', 'btn-fav' + contato.id) : createComponents('button', 'src/images/favorite_border.svg', 'btn-fav', 'btn-fav' + contato.id)
-
+    btnfav.setAttribute('data-fav', contato.isFavorite)
     const btnedit = createComponents('button', 'src/images/baseline-edit-24px.svg', 'btn-edit-exclude', 'btn-edit' + contato.id)
     const btnexc = createComponents('button', 'src/images/round-delete_outline-24px.svg', 'btn-edit-exclude', 'btn-exclude' + contato.id)
     //divs
@@ -52,16 +52,16 @@ const montaContato =(contato)=> {
         createComponents('p', 'Empresa: ' + contato.info.company), divComents)
     const divEditExclude = createDivs('edit-exclude', btnfav, btnedit, btnexc)
     const divContacts = createDivs('contact', divImg, divNome, divInfos, divEditExclude)
-    divContacts.setAttribute('data', contato.id)
+    divContacts.setAttribute('data-id', contato.id)
     listContact.appendChild(divContacts)
-    addHover(contato.id, contato.isFavorite)
+    addEventFav(contato)
     addEventDeletar(contato)
     addEventEditar(contato)
     addEventComments(contato)
 }
 
 //cria os componentes html 
-const createComponents = (element, conteudo, classe = 'undefined', id = 'undefined')=> {
+const createComponents = (element, conteudo, classe = 'undefined', id = 'undefined') => {
     const elemento = document.createElement(element)
     if (classe != 'undefined') {
         elemento.classList.add(classe)
@@ -95,10 +95,10 @@ function createDivs(classe, ...args) {
 }
 
 //add hover aos botões de favoritos
-function addHover(idContato, isFav) {
-    const btnFav = document.getElementById('btn-fav' + idContato)
-    const imgfav = document.getElementById('img-fav' + idContato)
-    if (!isFav) {
+function addEventFav(contato) {
+    const btnFav = document.getElementById('btn-fav' + contato.id)
+    const imgfav = document.getElementById('img-fav' + contato.id)
+    if (!contato.isFav) {
         btnFav.onmouseover = () => {
 
             imgfav.src = 'src/images/favorite.svg'
@@ -114,16 +114,84 @@ function addHover(idContato, isFav) {
             imgfav.src = 'src/images/favorite.svg'
         }
     }
+    btnFav.onclick = () => {
+        let isFav = true
+        let newSrc = ''
+        if (btnFav.dataset.fav == 'true') {
+            isFav = false
+            newSrc = 'src/images/favorite_border.svg'
+        } else {
+            isFav = true
+            newSrc = 'src/images/favorite.svg'
+        }
+         /*var form = new FormData(document.getElementById('login-form'));
+            fetch("/login", {
+                method: "POST",
+                body: form
+            });*/
+        const updateContactFav = {
+            "id": contato.id,
+            "firstName": contato.firstName,
+            "lastName": contato.lastName,
+            "email": contato.email,
+            "gender": contato.gender,
+            "isFavorite": isFav,
+            "company": contato.info.company,
+            "avatar": contato.info.avatar,
+            "address": contato.info.address,
+            "phone": contato.info.phone,
+            "comments": contato.info.comments
+        }
+        const fetchConf = {
+            method: 'DELETE',
+            body: updateContactFav
+        }
+        const updateFav = async () => {
+            const response = await fetch(`http://contacts-api.azurewebsites.net/api/contacts/${contato.id}`, fetchConf)
+            return response
+        }
+        updateFav().then((res) => {
+            if (res.status == 200) {
+                imgfav.src = newSrc
+                //filter , indexOf , window.state.contacts[i].isFavorite = isFav
+                //msg para erro no if anterior
+            } else if (res.status == 400) {
+                alert('Erro, contato não atualizado')
+            }
+        })
+    }
 }
 //adiciona evento ao botão deletar
 function addEventDeletar(contato) {
-
     const btnExclude = document.getElementById('btn-exclude' + contato.id);
+    const id = contato.id
     btnExclude.onclick = () => {
-        confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`);
+        if (confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`)) {
+            const fetchConf = {
+                method: 'DELETE'
+            }
+            const deleteContact = async () => {
+                const response = await fetch(`http://contacts-api.azurewebsites.net/api/contacts/${contato.id}`, fetchConf)
+                return response
+            }
+            deleteContact().then((res) => {
+                if (res.status == 200) {
+                    window.state = {
+                        ...window.state,
+                        contacts: window.state.contacts.filter((c) => c.id !== id)
+                    }
+                    alert('Contato excluído com sucesso!')
+                    removeContactsList()
+                    render()
+                } else if (res.status == 400) {
+                    alert('Erro, contato não excluído!')
+                }
+            })
+        }
     }
 }
-const addEventEditar=(contato)=> {
+
+const addEventEditar = (contato) => {
 
     const modal = document.getElementById('modal-add-edit');
     const titulo = document.getElementById('new-title');
@@ -135,7 +203,7 @@ const addEventEditar=(contato)=> {
     }
 }
 //adciona evento ao botão comentários que irá abrir a modal de comentários
-const addEventComments=(contato)=> {
+const addEventComments = (contato) => {
 
     const modalComents = document.getElementById('modal-coment')
     const btnComents = document.getElementById('btn-coments' + contato.id)
@@ -151,7 +219,7 @@ const addEventComments=(contato)=> {
 
 }
 
-const completeForm=(contato)=> {
+const completeForm = (contato) => {
     const firstNameInput = document.getElementById('firstName')
     const lastNameInput = document.getElementById('lastName')
     const emailInput = document.getElementById('email')
@@ -171,7 +239,7 @@ const completeForm=(contato)=> {
     comentariosInput.value = contato.info.comments
 }
 
-const createArrayPages=() =>{
+const createArrayPages = () => {
     const { contacts, favs, search } = window.state
     let listContacts = localStorage.getItem('filter') === 'favorites' ? favs : _.chunk(contacts, 10)
     listContacts = search != '' ? _.chunk(searchContacts(), 10) : listContacts
@@ -196,7 +264,7 @@ const montarPaginacao = () => {
 }
 
 //adciona evento a cada item de paginação criado removendo classe, removendo contatos, mudando a página e renderizando novamente
-const addEventPaginacao=(id)=> {
+const addEventPaginacao = (id) => {
     const item = document.getElementById(id)
     item.onclick = () => {
         if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
@@ -212,41 +280,40 @@ const addEventPaginacao=(id)=> {
     }
 }
 
-const removeContactsList=()=> {
+const removeContactsList = () => {
     const contatos = document.getElementsByClassName('contact')
     for (let i = contatos.length - 1; i >= 0; i--) {
         contatos[i].remove();
     }
 }
 
-const removePageList=()=> {
+const removePageList = () => {
     const pages = document.getElementsByClassName('page')
     for (let i = pages.length - 1; i >= 0; i--) {
         pages[i].remove();
     }
 }
 
-const render=()=>{
+const render = () => {
     const { contacts, favs, currentPage, search } = window.state
     let listContacts = localStorage.getItem('filter') === 'favorites' ? favs : _.chunk(contacts, 10)
     listContacts = search != '' ? _.chunk(searchContacts(), 10) : listContacts
     modifyFilterSelect()
-    if (listContacts != null && listContacts.length != 0)  {
+    if (listContacts != null && listContacts.length != 0) {
         for (let i = 0; i < listContacts[currentPage - 1].length; i++) {
             montaContato(listContacts[currentPage - 1][i])
         }
         createArrayPages()
         removePageList()
         montarPaginacao()
-    }else{
-        const notice = createComponents('p','Não encontrei nenhum contato com este nome!  ):','notice')
-        const divNotice = createDivs('contact',notice)
+    } else {
+        const notice = createComponents('p', 'Não encontrei nenhum contato com este nome!  ):', 'notice')
+        const divNotice = createDivs('contact', notice)
         listContact.appendChild(divNotice)
     }
 }
 
-const filterContacts = (obj) =>{return obj.isFavorite;}
-
+const filterContacts = (obj) => obj.isFavorite;
 
 loadContacts().then(() => {
     createArrayPages()
