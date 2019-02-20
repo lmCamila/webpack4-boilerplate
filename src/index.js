@@ -19,7 +19,15 @@ const loadContacts = async () => {
     const data = await response.json();
     window.state = {
         ...window.state,
-        contacts: data,
+        contacts: data.sort((a,b)=>{
+            if(a.firstName > b.firstName){
+                return 1
+            }
+            if(a.firstName < b.firstName){
+                return -1
+            }
+            return 0
+        }),
         favs: _.chunk(data.filter(filterContacts), 10)
     }
 }
