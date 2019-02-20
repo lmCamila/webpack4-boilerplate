@@ -1,10 +1,10 @@
 import { montarPaginacao, render, removeContactsList, removePageList, createArrayPages } from '../index.js'
 import { isNullOrUndefined } from 'util';
 //botao novo
-let titulo = document.getElementById('new-title');
-let modal = document.getElementById('modal-add-edit');
-let btnNew = document.getElementById('btn-new');
-let span = document.getElementsByClassName('close')[0];
+const titulo = document.getElementById('new-title');
+const modal = document.getElementById('modal-add-edit');
+const btnNew = document.getElementById('btn-new');
+const span = document.getElementsByClassName('close')[0];
 btnNew.onclick = () => {
     modal.style.display = 'block';
     titulo.innerHTML = 'Novo Contato';
@@ -14,8 +14,8 @@ span.onclick = () => {
     modal.style.display = 'none';
 }
 
-let btnBack = document.getElementById('back')
-let btnForward = document.getElementById('forward')
+const btnBack = document.getElementById('back')
+const btnForward = document.getElementById('forward')
 
 btnBack.onclick = () => {
     if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
@@ -48,11 +48,12 @@ btnBack.onclick = () => {
     }
     document.getElementById(window.state.currentPage).classList.add('currentPage')
 }
+
 btnForward.onclick = () => {
     if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
         document.getElementById(window.state.currentPage).classList.remove('currentPage')
     }
-    let page = window.state.currentPage + 1
+    let page = parseInt(window.state.currentPage) + 1
     if (page > window.state.contacts.length) {
         page = window.state.contacts.length
     }
@@ -72,6 +73,8 @@ btnForward.onclick = () => {
             ...window.state,
             currentArray: array
         }
+        console.log(array)
+        console.log(control)
         removeContactsList()
         removePageList()
         montarPaginacao()
@@ -88,7 +91,7 @@ function calculateControl() {
     return (window.state.currentPage / array) / 6
 }
 
-let select = document.getElementsByTagName('select')[0]
+const select = document.getElementsByTagName('select')[0]
 select.onclick = () => {
     if (select.selectedIndex == 0) {
         window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
@@ -104,8 +107,8 @@ select.onclick = () => {
 }
 
 function modifyFilterSelect() {
-    let option = localStorage.getItem('filter')
-    let options = document.getElementsByTagName('option')
+    const option = localStorage.getItem('filter')
+    const options = document.getElementsByTagName('option')
     if (option === 'none') {
         options[0].setAttribute('selected', 'selected')
     } else if (option === 'favorites') {
@@ -113,14 +116,30 @@ function modifyFilterSelect() {
     }
 }
 
-export{modifyFilterSelect,searchContacts}
-
-function searchContacts(){
-    const {contacts,search} = window.state
-    let teste = 'Ami'
-    let patern =`(${teste}\\B)`
-    const contactsMatch = contacts.filter(c => new RegExp(patern,'i').test(c.firstName));
-    console.log(contactsMatch)
-    //https://developer.mozilla.org/pt-BR/docs/Web/JavaScript/Guide/Regular_Expressions
+function searchContacts() {
+    const { contacts, search } = window.state
+    let searchFilter = search
+    searchFilter = searchFilter.replace(new RegExp('(ã|á|à|Ã|À|Á)', 'gi'), 'a')
+    searchFilter = searchFilter.replace(new RegExp('(é|è|É|È)', 'gi'), 'e')
+    searchFilter = searchFilter.replace(new RegExp('(í|ì|Í|Ì)', 'gi'), 'i')
+    searchFilter = searchFilter.replace(new RegExp('(ó|ò|õ|Ò|Ó|Õ)', 'gi'), 'o')
+    searchFilter = searchFilter.replace(new RegExp('(ú|ù|Ú|Ù)', 'gi'), 'u')
+    searchFilter = searchFilter.replace(new RegExp('(ç|Ç)', 'gi'), 'c')
+    let patern = `^${searchFilter}.*`
+    const contactsMatch = contacts.filter(c => new RegExp(patern, 'gi').test(c.firstName));
+   
+    return contactsMatch
 }
 
+const search = document.getElementById('search')
+search.onkeyup = ({ target: { value } }) => {
+    window.state = {
+        ...window.state,
+        search: value
+    }
+
+    removeContactsList()
+    render()
+
+}
+export { modifyFilterSelect, searchContacts }
