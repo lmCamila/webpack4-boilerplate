@@ -30,13 +30,13 @@ btnBack.onclick = () => {
         currentPage: page
     }
 
-    let control = (window.state.currentPage % 6)
+    const control = (window.state.currentPage % 6)
 
     if (control > 0) {
         removeContactsList()
         render()
     } else if (control == 0) {
-        let array = window.state.currentArray - 1
+        const array = window.state.currentArray - 1
         window.state = {
             ...window.state,
             currentArray: array
@@ -63,14 +63,18 @@ btnForward.onclick = () => {
         ...window.state,
         currentPage: page
     }
+    
+    const control = calculateControl()
 
-    let control = calculateControl()
     if (control <= 1) {
         removeContactsList()
         render()
     } else if (control > 1) {
-        let array = window.state.currentArray + 1
-        console.log(array)
+        
+        
+        const array = window.state.currentArray + 1
+      
+      
         window.state = {
             ...window.state,
             currentArray: array
@@ -83,7 +87,7 @@ btnForward.onclick = () => {
     document.getElementById(window.state.currentPage).classList.add('currentPage')
 }
 
-function calculateControl() {
+const calculateControl =()=>{
     let array = 1;
     if (window.state.currentArray > 0) {
         array = window.state.currentArray + 1
@@ -106,7 +110,7 @@ select.onclick = () => {
     }
 }
 
-function modifyFilterSelect() {
+const modifyFilterSelect = ()=> {
     const option = localStorage.getItem('filter')
     const options = document.getElementsByTagName('option')
     if (option === 'none') {
@@ -116,7 +120,7 @@ function modifyFilterSelect() {
     }
 }
 
-function searchContacts() {
+const searchContacts = ()=> {
     const { contacts, search } = window.state
     let searchFilter = search
     searchFilter = searchFilter.replace(new RegExp('(ã|á|à|Ã|À|Á)', 'gi'), 'a')
@@ -125,7 +129,7 @@ function searchContacts() {
     searchFilter = searchFilter.replace(new RegExp('(ó|ò|õ|Ò|Ó|Õ)', 'gi'), 'o')
     searchFilter = searchFilter.replace(new RegExp('(ú|ù|Ú|Ù)', 'gi'), 'u')
     searchFilter = searchFilter.replace(new RegExp('(ç|Ç)', 'gi'), 'c')
-    let patern = `^${searchFilter}.*`
+    const patern = `^${searchFilter}.*`
     const contactsMatch = contacts.filter(c => new RegExp(patern, 'gi').test(c.firstName));
    
     return contactsMatch
