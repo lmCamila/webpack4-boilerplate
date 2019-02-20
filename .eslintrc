@@ -10,6 +10,10 @@
     "sourceType": "module"
   },
   "rules": {
-    "no-console": 0
+    "no-console": 0,
+    "no-var": "error",
+    "prefer-const": "error",
+    "func-style":"error",
+    "arrow-body-style": ["error", "as-needed", { "requireReturnForObjectLiteral": true }]
   }
 }
