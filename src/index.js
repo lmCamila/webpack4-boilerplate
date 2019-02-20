@@ -1,7 +1,7 @@
 /* eslint-disable func-style */
 import './index.css';
 import { modifyFilterSelect, searchContacts } from './js/view.js';
-import { isNullOrUndefined, error } from 'util';
+import { isNullOrUndefined} from 'util';
 const _ = require('lodash/array')
 window.state = {
     pages: [],
