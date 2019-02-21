@@ -484,9 +484,9 @@ footer{
     .pagination{
         display: flex;
         justify-content: flex-start;
-        width: 75%;
+        width: 94%;
         background: rgba(255,255,255,0.8);
-        margin: 0% 13% 0% 15%;
+        margin: 0% 3% 0% 3%;
         box-shadow: rgba(10, 10, 10, 0.7);
     }
    
@@ -516,7 +516,27 @@ footer{
         padding-bottom: 3%;
         margin-bottom:2%;
     }
-    
-   
+    #modal-add-edit{
+        display: none;
+        position: fixed;
+        z-index: 1;
+        top:1%;
+        left: 2%;
+        width: 95%;
+        height: 97%;
+        overflow: auto;
+        font-family: 'Assistant', sans-serif;
+        background: linear-gradient(rgba(148, 145, 145, 0.7),rgba(158, 157, 157, 0.7)),url("images/background.jpg");
+    }
+    .close{
+        display: inline-block;
+        position: fixed;
+        color:rgba(32, 2, 2, 0.973);
+        font-size: 28px;
+        float: right;
+        top:3%;
+        right: 5%;
+        font-weight: bold;
+    }
 }
 
