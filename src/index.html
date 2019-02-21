@@ -59,24 +59,30 @@
         <div id="modal-add-edit">
             <span class="close">&times;</span>
             <div class="new-contact">
+                   
                 <form id="form-new-edit" action="#">
-                    <h1 id="new-title">Novo contato</h1>
+                        <h1 id="new-title">Novo contato</h1>
+                        <input type='hidden' name="id" id="id">
+                    <div>
+                            <input type="checkbox" name="isFavorite"  id="isFavorite" /><label
+                            for="isFavorite">Favorito</label>
+                    </div>
                     <div>
                         <label for="firstName">Nome:</label>
                         <div class="input-contact">
-                            <input type="text" name="firstName" id="firstName" />
+                            <input type="text" name="firstName" id="firstName" required />
                         </div>
                     </div>
                     <div>
                         <label for="lastName">Sobrenome:</label>
                         <div class="input-contact">
-                            <input type="text" name="lastName" id="lastName" />
+                            <input type="text" name="lastName" id="lastName" required />
                         </div>
                     </div>
                     <div>
                         <label for="email">Email:</label>
                         <div class="input-contact">
-                            <input type="email" name="email" id="email" />
+                            <input type="email" name="email" id="email" required/>
                         </div>
                     </div>
                     <div>
@@ -91,25 +97,25 @@
                     <div>
                         <label for="avatar">Avatar:</label>
                         <div class="input-contact">
-                            <input class="text" type="file" name="avatar" />
+                            <input class="text" type="file" name="avatar" id="avatar"/>
                         </div>
                     </div>
                     <div>
                         <label for="company">Empresa:</label>
                         <div class="input-contact">
-                            <input type="text" name="company" id="company" />
+                            <input type="text" name="company" id="company" required/>
                         </div>
                     </div>
                     <div>
                         <label for="address">Endereço:</label>
                         <div class="input-contact">
-                            <input type="text" name="address" id="address" />
+                            <input type="text" name="address" id="address" required/>
                         </div>
                     </div>
                     <div>
                         <label for="phone">Telefone:</label>
                         <div class="input-contact">
-                            <input type="tel" name="phone" id="phone" />
+                            <input type="tel" name="phone" id="phone" required/>
                         </div>
                     </div>
                     <div>
@@ -119,7 +125,7 @@
                         </div>
                     </div>
                     <div id="btn-submit">
-                        <input type="submit" value="Enviar">
+                        <input id="submit"type="submit" value="Enviar">
                     </div>
                 </form>
             </div>

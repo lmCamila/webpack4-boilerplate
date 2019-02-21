@@ -1,7 +1,7 @@
 /* eslint-disable func-style */
 import './index.css';
 import { modifyFilterSelect, searchContacts } from './js/view.js';
-import { isNullOrUndefined} from 'util';
+import { isNullOrUndefined } from 'util';
 const _ = require('lodash/array')
 window.state = {
     pages: [],
@@ -58,6 +58,7 @@ const montaContato = (contato) => {
     addEventDeletar(contato)
     addEventEditar(contato)
     addEventComments(contato)
+    adcionarUpdateBtn(contato)
 }
 
 //cria os componentes html 
@@ -98,7 +99,7 @@ function createDivs(classe, ...args) {
 function addEventFav(contato) {
     const btnFav = document.getElementById('btn-fav' + contato.id)
     const imgfav = document.getElementById('img-fav' + contato.id)
-    if (!contato.isFav) {
+    if (btnFav.dataset.fav == 'false') {
         btnFav.onmouseover = () => {
 
             imgfav.src = 'src/images/favorite.svg'
@@ -114,52 +115,59 @@ function addEventFav(contato) {
             imgfav.src = 'src/images/favorite.svg'
         }
     }
+}
+const adcionarUpdateBtn = contato =>{
+    const btnFav = document.getElementById('btn-fav' + contato.id)
+    const imgfav = document.getElementById('img-fav' + contato.id)
     btnFav.onclick = () => {
         let isFav = true
         let newSrc = ''
+        let msgError = ''
         if (btnFav.dataset.fav == 'true') {
             isFav = false
             newSrc = 'src/images/favorite_border.svg'
+            msgError = 'Erro,contato não foi removido dos favoritos.'
         } else {
             isFav = true
             newSrc = 'src/images/favorite.svg'
+            msgError = 'Erro,contato não foi adicionado aos favoritos.'
         }
-         /*var form = new FormData(document.getElementById('login-form'));
-            fetch("/login", {
-                method: "POST",
-                body: form
-            });*/
-        const updateContactFav = {
-            "id": contato.id,
-            "firstName": contato.firstName,
-            "lastName": contato.lastName,
-            "email": contato.email,
-            "gender": contato.gender,
-            "isFavorite": isFav,
-            "company": contato.info.company,
-            "avatar": contato.info.avatar,
-            "address": contato.info.address,
-            "phone": contato.info.phone,
-            "comments": contato.info.comments
-        }
+      
         const fetchConf = {
-            method: 'DELETE',
-            body: updateContactFav
+            method: 'PUT',
+            headers: {
+                'Accept': 'application/json, text/plain, */*',
+                'Content-Type': 'application/json'
+              },
+            body: rideModel(contato.firstName, contato.lastName, contato.email, contato.gender, isFav,
+                contato.info.company, contato.info.avatar,contato.info.address,contato.info.phone,
+                contato.info.comments)
         }
+       
         const updateFav = async () => {
+            
             const response = await fetch(`http://contacts-api.azurewebsites.net/api/contacts/${contato.id}`, fetchConf)
             return response
         }
         updateFav().then((res) => {
             if (res.status == 200) {
                 imgfav.src = newSrc
-                //filter , indexOf , window.state.contacts[i].isFavorite = isFav
-                //msg para erro no if anterior
+                const updatedContact = async ()=>{
+                    const responceUp = await fetch(res.url)
+                    return await responceUp.json()
+                }
+                updatedContact().then((response)=>{
+                    const results = window.state.contacts.filter((c) => c.id == contato.id)
+                    const pos = window.state.contacts.indexOf(results[0])
+                    window.state.contacts.splice(pos, 1,response)
+                    removeContactsList()
+                    render()
+                })
             } else if (res.status == 400) {
-                alert('Erro, contato não atualizado')
+                alert(msgError)
             }
         })
-    }
+    }   
 }
 //adiciona evento ao botão deletar
 function addEventDeletar(contato) {
@@ -191,6 +199,22 @@ function addEventDeletar(contato) {
     }
 }
 
+const rideModel = (firstName,lastName,email,gender,favorite,company,avatar,address,phone,comments = null)=>{
+    const updateContactFav = {
+        "firstName": firstName,
+        "lastName":lastName,
+        "email":email,
+        "gender": gender,
+        "isFavorite": favorite,
+        "company":company,
+        "avatar": avatar,
+        "address": address,
+        "phone": phone,
+        "comments":comments
+    }
+    return JSON.stringify(updateContactFav)
+}
+
 const addEventEditar = (contato) => {
 
     const modal = document.getElementById('modal-add-edit');
@@ -220,6 +244,9 @@ const addEventComments = (contato) => {
 }
 
 const completeForm = (contato) => {
+    const id = document.getElementById('id')
+    const favorite = document.getElementById('isFavorite')
+    const avatarInput = document.getElementById('avatar')
     const firstNameInput = document.getElementById('firstName')
     const lastNameInput = document.getElementById('lastName')
     const emailInput = document.getElementById('email')
@@ -229,6 +256,9 @@ const completeForm = (contato) => {
     const enderecoInput = document.getElementById('address')
     const telefoneInput = document.getElementById('phone')
     const comentariosInput = document.getElementById('comment')
+    id.value = contato.id
+    contato.isFavorite ? favorite.checked = true : favorite.checked = false
+    avatarInput.setAttribute('data-url',contato.info.avatar)
     firstNameInput.value = contato.firstName
     lastNameInput.value = contato.lastName
     emailInput.value = contato.email
@@ -322,4 +352,4 @@ loadContacts().then(() => {
     searchContacts()
 })
 
-export { montarPaginacao, render, removeContactsList, removePageList, createArrayPages, _ }
+export { montarPaginacao, render, removeContactsList, removePageList, createArrayPages, _, rideModel }
