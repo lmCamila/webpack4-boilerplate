@@ -20,6 +20,7 @@ const loadContacts = async () => {
     }
 }
 
+//model usado para construir body para as requisições
 const rideModel = (firstName,lastName,email,gender,favorite,company,avatar,address,phone,comments = null)=>{
     const model = {
         "firstName": firstName,
@@ -35,6 +36,8 @@ const rideModel = (firstName,lastName,email,gender,favorite,company,avatar,addre
     }
     return JSON.stringify(model)
 } 
+
+//envia requisições de updates à api
 const sendUpdate = async (body,id) => {
     const fetchConf = {
         method: "PUT",
@@ -48,6 +51,21 @@ const sendUpdate = async (body,id) => {
     return response
 }
 
+//envia requisição para criar um novo contato na api
+const sendNew = async (body) => {
+    const fetchConf = {
+        method: "POST",
+        headers: {
+            'Accept': 'application/json, text/plain, */*',
+            'Content-Type': 'application/json'
+        },
+        body: body
+    }
+    const response = await fetch(`http://contacts-api.azurewebsites.net/api/contacts`, fetchConf)
+    return response
+}
+
+//envia requisição para deletar contato
 const deleteContact = async (id) => {
     const fetchConf = {
         method: 'DELETE'
@@ -56,8 +74,10 @@ const deleteContact = async (id) => {
     return response
 }
 
+//carrega um contato por id da api
 const getContactUrl = async (url)=>{
     const responceUp = await fetch(url)
     return await responceUp.json()
 }
-export{ loadContacts , rideModel, sendUpdate, deleteContact, getContactUrl}
+
+export{ loadContacts , rideModel, sendUpdate, deleteContact, getContactUrl, sendNew}

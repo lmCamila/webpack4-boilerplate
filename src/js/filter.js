@@ -2,6 +2,8 @@ import { removeContactsList} from './contactsList.js'
 import{ createArrayPages } from './pagination.js'
 import{ render } from '../index.js'
 const select = document.getElementsByTagName('select')[0]
+
+//renderiza os contatos e adciona ao localStorage a preferência de filtro
 select.onclick = () => {
     if (select.selectedIndex == 0) {
         window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
@@ -16,6 +18,7 @@ select.onclick = () => {
     }
 }
 
+//modifica o valor da option do filtro para ficar de acordo com o localStorage
 const modifyFilterSelect = () => {
     const option = localStorage.getItem('filter')
     const options = document.getElementsByTagName('option')
@@ -26,6 +29,7 @@ const modifyFilterSelect = () => {
     }
 }
 
+//filtra os contatos aplicando regex e retorna um array
 const searchContacts = () => {
     const { contacts, search } = window.state
     let searchFilter = search
@@ -36,11 +40,11 @@ const searchContacts = () => {
     searchFilter = searchFilter.replace(new RegExp('(ú|ù|Ú|Ù)', 'gi'), 'u')
     searchFilter = searchFilter.replace(new RegExp('(ç|Ç)', 'gi'), 'c')
     const patern = `^${searchFilter}.*`
-    const contactsMatch = contacts.filter(c => new RegExp(patern, 'gi').test(c.firstName));
 
-    return contactsMatch
+    return contacts.filter(c => new RegExp(patern, 'gi').test(c.firstName));
 }
 
+//evento de digitação para fazer a busca assim que algo for digitado
 const search = document.getElementById('search')
 search.onkeyup = ({ target: { value } }) => {
     window.state = {
@@ -53,6 +57,7 @@ search.onkeyup = ({ target: { value } }) => {
 
 }
 
+//retorna um array com os contatos favoritos
 const filterContacts = (obj) => obj.isFavorite;
 
 export{ searchContacts, filterContacts, modifyFilterSelect}

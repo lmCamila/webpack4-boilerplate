@@ -1,7 +1,8 @@
 import { createComponents, createDivs} from './view.js'
 import {addEventComments, addEventDeletar, addEventEditar, addEventFav, addEventUpdateFav} from './eventButton.js'
+import { isNullOrUndefined } from 'util';
 const listContact = document.getElementById('listContact')
-
+//cria o contato no DOM e adciona os eventos 
 const montaContato = (contato) => {
     //componente de div coment
     const btnComents = createComponents('button', 'src/images/more.svg', 'btn-coments', 'btn-coments' + contato.id)
@@ -11,7 +12,7 @@ const montaContato = (contato) => {
     const btnedit = createComponents('button', 'src/images/baseline-edit-24px.svg', 'btn-edit-exclude', 'btn-edit' + contato.id)
     const btnexc = createComponents('button', 'src/images/round-delete_outline-24px.svg', 'btn-edit-exclude', 'btn-exclude' + contato.id)
     //divs
-    const imgAvatar = contato.info.avatar != null ? contato.info.avatar : 'src/images/avatar-images.jpg'
+    const imgAvatar = !isNullOrUndefined(contato.info.avatar) ? contato.info.avatar : 'src/images/avatar-images.jpg'
     const divImg = createDivs('div-img', createComponents('img', imgAvatar))
     const divNome = createDivs('div-name', createComponents('h3', contato.firstName + " " + contato.lastName),
         createComponents('p', 'Email: ' + contato.email), createComponents('p', 'Endereço: ' + contato.info.address),
@@ -30,6 +31,7 @@ const montaContato = (contato) => {
     addEventUpdateFav(contato)
 }
 
+//remove todos contatos da página
 const removeContactsList = () => {
     const contatos = document.getElementsByClassName('contact')
     for (let i = contatos.length - 1; i >= 0; i--) {

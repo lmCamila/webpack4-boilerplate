@@ -9,6 +9,7 @@
 </head>
 
 <body id="body">
+    
     <header>
         <nav class="menu">
             <div>
@@ -38,6 +39,7 @@
             </div>
         </nav>
     </header>
+    
     <section class="contacts">
         <div id="listContact" class="list">
             <div class="filter">
@@ -56,15 +58,15 @@
         </div>
     </section>
     <section>
-        <div id="modal-add-edit">
+        <div id="modal-add-edit" data-modo="new">
             <span class="close">&times;</span>
             <div class="new-contact">
-                   
+
                 <form id="form-new-edit" action="#">
-                        <h1 id="new-title">Novo contato</h1>
-                        <input type='hidden' name="id" id="id">
+                    <h1 id="new-title">Novo contato</h1>
+                    <input type='hidden' name="id" id="id">
                     <div>
-                            <input type="checkbox" name="isFavorite"  id="isFavorite" /><label
+                        <input type="checkbox" name="isFavorite" id="isFavorite" /><label
                             for="isFavorite">Favorito</label>
                     </div>
                     <div>
@@ -82,7 +84,7 @@
                     <div>
                         <label for="email">Email:</label>
                         <div class="input-contact">
-                            <input type="email" name="email" id="email" required/>
+                            <input type="email" name="email" id="email" required />
                         </div>
                     </div>
                     <div>
@@ -97,25 +99,28 @@
                     <div>
                         <label for="avatar">Avatar:</label>
                         <div class="input-contact">
-                            <input class="text" type="file" name="avatar" id="avatar"/>
+                            <input class="text" type="file" name="avatar" id="avatar" />
+                        </div>
+                        <div class="progress-bar" id="progress-bar">
+                            <div class="progress" id="progress"></div>
                         </div>
                     </div>
                     <div>
                         <label for="company">Empresa:</label>
                         <div class="input-contact">
-                            <input type="text" name="company" id="company" required/>
+                            <input type="text" name="company" id="company" required />
                         </div>
                     </div>
                     <div>
                         <label for="address">Endereço:</label>
                         <div class="input-contact">
-                            <input type="text" name="address" id="address" required/>
+                            <input type="text" name="address" id="address" required />
                         </div>
                     </div>
                     <div>
                         <label for="phone">Telefone:</label>
                         <div class="input-contact">
-                            <input type="tel" name="phone" id="phone" required/>
+                            <input type="tel" name="phone" id="phone" required />
                         </div>
                     </div>
                     <div>
@@ -125,7 +130,7 @@
                         </div>
                     </div>
                     <div id="btn-submit">
-                        <input id="submit"type="submit" value="Enviar">
+                        <input id="submit" type="submit" value="Enviar">
                     </div>
                 </form>
             </div>
@@ -140,6 +145,7 @@
             </div>
         </div>
     </section>
+    <div id="shadow"></div>
     <footer>
         <button class="btn-white" id="btn-new"><img src="images/baseline-person_add-24px.svg" alt=""></button>
     </footer>

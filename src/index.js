@@ -36,9 +36,8 @@ const render = () => {
     }
 }
 
+
 loadContacts().then(() => {
-    createArrayPages()
-    montarPaginacao()
     render()
     searchContacts()
 })
