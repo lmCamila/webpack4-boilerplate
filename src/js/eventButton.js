@@ -1,6 +1,5 @@
 import { render } from '../index.js'
 import { rideModel, loadContacts, sendUpdate, deleteContact, getContactUrl, sendNew } from './api.js'
-import { createArrayPages, montarPaginacao } from './pagination.js'
 import { searchContacts } from './filter.js'
 import { completeForm, validateForm } from './form.js'
 import { removeContactsList } from './contactsList.js'
