@@ -10,50 +10,57 @@
     const enderecoInput = document.getElementById('address')
     const telefoneInput = document.getElementById('phone')
     const comentariosInput = document.getElementById('comment')
-
-const validateForm = (event)=>{
-    let countError = 0
-    if(firstNameInput.value.lenght < 3){
-        event.preventdefault();
+firstNameInput.onkeyup = ({target: { value }})=>{
+    if(value.length < 3){
         firstNameInput.style.backgroundColor = "#E15A5A"
         firstNameInput.style.border ="1px solid #FF0000"
         firstNameInput.focus
-        countError++
+    }else{
+        firstNameInput.style.backgroundColor = "#FFFFFF"
+        firstNameInput.style.border = "none"
     }
-    if(lastNameInput.value.lenght < 3){
-        event.preventdefault();
+}
+lastNameInput.onkeyup = ({target: { value }})=>{
+    if(value.length < 3){
         lastNameInput.style.backgroundColor = "#E15A5A"
         lastNameInput.style.border ="1px solid #FF0000"
-        lastNameInput.focus()
-        countError++
+        lastNameInput.focus
+    }else{
+        lastNameInput.style.backgroundColor = "#FFFFFF"
+        lastNameInput.style.border = "none"
     }
-    if(emailInput.value.lenght < 3){
-        event.preventdefault();
-        lastNameInput.style.backgroundColor = "#E15A5A"
-        lastNameInput.style.border ="1px solid #FF0000"
-        lastNameInput.focus()
-        countError++
+}
+emailInput.onkeyup = ({target: { value }})=>{
+    if(value.length < 3){
+        emailInput.style.backgroundColor = "#E15A5A"
+        emailInput.style.border ="1px solid #FF0000"
+        emailInput.focus
+    }else{
+        emailInput.style.backgroundColor = "#FFFFFF"
+        emailInput.style.border = "none"
     }
-    if(empresaInput< 3){
-        event.preventdefault();
+}
+empresaInput.onkeyup = ({target: { value }})=>{
+    if(value.length < 3){
         empresaInput.style.backgroundColor = "#E15A5A"
         empresaInput.style.border ="1px solid #FF0000"
-        empresaInput.focus()
-        countError++
+        empresaInput.focus
+    }else{
+        empresaInput.style.backgroundColor = "#FFFFFF"
+        empresaInput.style.border = "none"
     }
-    if(enderecoInput< 3){
-        event.preventdefault();
+}
+enderecoInput.onkeyup = ({target: { value }})=>{
+    if(value.length < 3){
         enderecoInput.style.backgroundColor = "#E15A5A"
         enderecoInput.style.border ="1px solid #FF0000"
-        enderecoInput.focus()
-        countError++
+        enderecoInput.focus
+    }else{
+        enderecoInput.style.backgroundColor = "#FFFFFF"
+        enderecoInput.style.border = "none"
     }
-   if(countError == 0){
-       return true
-   }else{
-       return false
-   }
 }
+
 
 //completa formulário de edição com as informações do contato
 const completeForm = (contato) => {
@@ -70,4 +77,4 @@ const completeForm = (contato) => {
     comentariosInput.value = contato.info.comments
 }
 
-export{ completeForm , validateForm}
+export{ completeForm }
