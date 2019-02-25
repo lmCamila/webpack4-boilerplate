@@ -1,3 +1,6 @@
+import { removeContactsList } from "./contactsList";
+import { render } from "..";
+
 //cria os componentes html 
 const createComponents = (element, conteudo, classe = 'undefined', id = 'undefined') => {
     const elemento = document.createElement(element)
@@ -21,7 +24,7 @@ const createComponents = (element, conteudo, classe = 'undefined', id = 'undefin
     elemento.textContent = conteudo
     return elemento
 }
-
+//cria as divs
 const createDivs = (classe, ...args) => {
     const arg = Array.from(args);
     const div = document.createElement('div')
@@ -31,5 +34,32 @@ const createDivs = (classe, ...args) => {
     }
     return div
 }
+//verifica o tamanho da tela e troca a maneira de renderizar os componentes
+const verifySize = () => {
+    const widthList = window.innerWidth
+    if (widthList < 890) {
+        removeContactsList()
+        render(true)
+    } else {
+        removeContactsList()
+        render()
+    }
+}
 
-export{ createDivs, createComponents}
+window.addEventListener('resize', () => {
+    verifySize()
+})
+
+
+const verifyLoader = () => {
+    const loader = document.getElementsByClassName('loader')[0]
+    const { loading } = window.state
+    if (loading == true) {
+        loader.style.display = 'block'
+    } else {
+        loader.style.display = 'none'
+    }
+}
+
+
+export { createDivs, createComponents, verifySize, verifyLoader }

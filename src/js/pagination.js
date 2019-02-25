@@ -1,7 +1,7 @@
 import { isNullOrUndefined } from 'util';
-import{ render , _ } from '../index.js'
+import{ _ } from '../index.js'
 import{ searchContacts } from './filter.js'
-import{ createComponents } from './view.js'
+import{ createComponents , verifySize} from './view.js'
 import{ removeContactsList } from './contactsList.js'
 
 const btnBack = document.getElementById('back')
@@ -53,7 +53,7 @@ const addEventPaginacao = (id) => {
             currentPage: item.textContent
         }
         removeContactsList()
-        render()
+        verifySize()
         document.getElementById(window.state.currentPage).classList.add('currentPage')
     }
 }
@@ -77,7 +77,7 @@ btnBack.onclick = () => {
 
     if (control > 0) {
         removeContactsList()
-        render()
+        verifySize()
     } else if (control == 0) {
         const array = window.state.currentArray - 1
         window.state = {
@@ -87,7 +87,7 @@ btnBack.onclick = () => {
         removeContactsList()
         removePageList()
         montarPaginacao()
-        render()
+        verifySize()
     }
     document.getElementById(window.state.currentPage).classList.add('currentPage')
 }
@@ -112,7 +112,7 @@ btnForward.onclick = () => {
    
     if (control <= 1) {
         removeContactsList()
-        render()
+        verifySize()
     } else if (control > 1) {
 
         const array = window.state.currentArray + 1
@@ -123,7 +123,7 @@ btnForward.onclick = () => {
         removeContactsList()
         removePageList()
         montarPaginacao()
-        render()
+        verifySize()
     }
     document.getElementById(window.state.currentPage).classList.add('currentPage')
 }

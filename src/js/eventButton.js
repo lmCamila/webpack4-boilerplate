@@ -1,10 +1,11 @@
-import { render } from '../index.js'
 import { rideModel, loadContacts, sendUpdate, deleteContact, getContactUrl, sendNew } from './api.js'
 import { searchContacts } from './filter.js'
-import { completeForm, validateForm } from './form.js'
-import { removeContactsList } from './contactsList.js'
+import { completeForm, validateEmail, validateLength } from './form.js'
+import { removeContactsList, imgFav, imgNotFav } from './contactsList.js'
 import { uploadFile } from './upload.js'
-
+import { verifySize } from './view.js';
+import { render } from '../index.js';
+const modalDetalheContato = document.getElementById('detail-contact')
 const avatarInput = document.getElementById('avatar')
 const titulo = document.getElementById('new-title');
 const modal = document.getElementById('modal-add-edit');
@@ -34,61 +35,71 @@ avatarInput.onchange = () => {
 
 //botão enviar formulario de novo contato ou editar contato
 const btnEnviar = document.getElementById('submit')
-btnEnviar.onclick = (event) => {
+btnEnviar.onclick = () => {
 
     const id = document.getElementById('id').value
     const favorite = document.getElementById('isFavorite').checked
-    const firstNameInput = document.getElementById('firstName').value
-    const lastNameInput = document.getElementById('lastName').value
-    const emailInput = document.getElementById('email').value
+    const firstNameInput = document.getElementById('firstName')
+    const lastNameInput = document.getElementById('lastName')
+    const emailInput = document.getElementById('email')
     const genFemInput = document.getElementById('cFem').checked
-    const empresaInput = document.getElementById('company').value
-    const enderecoInput = document.getElementById('address').value
-    const telefoneInput = document.getElementById('phone').value
+    const empresaInput = document.getElementById('company')
+    const enderecoInput = document.getElementById('address')
+    const telefoneInput = document.getElementById('phone')
     const comentariosInput = document.getElementById('comment').value
     const url = avatarInput.dataset.url
 
-    if (validateForm(event)) {
-        const gen = genFemInput ? "f" : "m"
-        let msgSuccess = " "
+    const gen = genFemInput ? "f" : "m"
+    let msgSuccess = " "
 
-        const body = rideModel(firstNameInput, lastNameInput, emailInput, gen, favorite,
-            empresaInput, url, enderecoInput, telefoneInput,
-            comentariosInput)
-        //verifica modo da modal 
-        if (modal.dataset.modo == 'new') {
-            msgSuccess = "Contato cadastrado com sucesso"
-            sendNew(body).then((res) => {
-                if (res == 200) {
-                    alert(msgSuccess)
-                    loadContacts().then(() => {
-                        render()
-                        searchContacts()
-                    })
-                } else if (res == 400) {
-                    alert('Erro, não foi possivel concluir essa ação.')
-                }
-            })
-        } else if (modal.dataset.modo == 'edit') {
-            msgSuccess = "Contato alterado com sucesso"
-            sendUpdate(body, id).then((res) => {
-                if (res == 200) {
-                    getContactUrl(res.url).then((response) => {
-                        const results = window.state.contacts.filter((c) => c.id == id)
-                        const pos = window.state.contacts.indexOf(results[0])
-                        window.state.contacts.splice(pos, 1, response)
-                        removeContactsList()
-                        render()
-                        alert(msgSuccess)
-                    })
-                } else if (res == 400) {
-                    alert('Erro, não foi possivel concluir essa ação.')
-                }
-            })
-        }
-        modal.style.display = 'none';
-        divShadow.style.display = 'none'
+    if(!validateLength(firstNameInput.value,firstNameInput) ||
+    !validateLength(lastNameInput.value,lastNameInput) ||
+    !validateEmail(emailInput.value) ||
+    !validateLength(empresaInput.value,empresaInput) ||
+    !validateLength(enderecoInput.value,enderecoInput)||
+    !validateLength(telefoneInput.value, telefoneInput)){
+        return
     }
+    //firstName lastName email telefone empresa endereco
+    const body = rideModel(firstNameInput.value, lastNameInput.value, emailInput.value, gen, favorite,
+        empresaInput.value, url, enderecoInput.value, telefoneInput.value,
+        comentariosInput)
+
+    //verifica modo da modal e faz requisição
+    if (modal.dataset.modo == 'new') {
+        msgSuccess = "Contato cadastrado com sucesso"
+        sendNew(body).then((res) => {
+            if (res.status == 200) {
+                console.log(res)
+                alert(msgSuccess)
+                loadContacts().then(() => {
+                    verifySize()
+                    searchContacts()
+                })
+            } else if (res.status == 400) {
+                alert('Erro, não foi possivel concluir essa ação.')
+                console.log(res)
+            }
+        })
+    } else if (modal.dataset.modo == 'edit') {
+        msgSuccess = "Contato alterado com sucesso"
+        sendUpdate(body, id).then((res) => {
+            if (res.status == 200) {
+                getContactUrl(res.url).then((response) => {
+                    const results = window.state.contacts.filter((c) => c.id == id)
+                    const pos = window.state.contacts.indexOf(results[0])
+                    window.state.contacts.splice(pos, 1, response)
+                    removeContactsList()
+                    verifySize()
+                    alert(msgSuccess)
+                })
+            } else if (res.status == 400) {
+                alert('Erro, não foi possivel concluir essa ação.')
+            }
+        })
+    }
+    modal.style.display = 'none';
+    divShadow.style.display = 'none'
 }
 
 //adciona evento onclick para favoritar contato
@@ -101,11 +112,11 @@ const addEventUpdateFav = contato => {
         let msgError = ''
         if (btnFav.dataset.fav == 'true') {
             isFav = false
-            newSrc = 'src/images/favorite_border.svg'
+            newSrc = imgNotFav
             msgError = 'Erro,contato não foi removido dos favoritos.'
         } else {
             isFav = true
-            newSrc = 'src/images/favorite.svg'
+            newSrc = imgFav
             msgError = 'Erro,contato não foi adicionado aos favoritos.'
         }
         const body = rideModel(contato.firstName, contato.lastName, contato.email, contato.gender, isFav,
@@ -120,7 +131,7 @@ const addEventUpdateFav = contato => {
                     const pos = window.state.contacts.indexOf(results[0])
                     window.state.contacts.splice(pos, 1, response)
                     removeContactsList()
-                    render()
+                    verifySize()
                 })
             } else if (res.status == 400) {
                 alert(msgError)
@@ -133,17 +144,21 @@ const addEventUpdateFav = contato => {
 const addEventDeletar = (contato) => {
     const btnExclude = document.getElementById('btn-exclude' + contato.id);
     const id = contato.id
+    console.log(id)
+    console.log(window.state.contacts)
     btnExclude.onclick = () => {
         if (confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`)) {
             deleteContact(contato.id).then((res) => {
+                console.log(window.state.contacts)
                 if (res.status == 200) {
+                    console.log(window.state.contacts.filter((c) => c.id !== id))
                     window.state = {
                         ...window.state,
                         contacts: window.state.contacts.filter((c) => c.id !== id)
                     }
+                    console.log(window.state.contacts)
                     alert('Contato excluído com sucesso!')
-                    removeContactsList()
-                    render()
+                    verifySize()                   
                 } else if (res.status == 400) {
                     alert('Erro, contato não excluído!')
                 }
@@ -160,17 +175,17 @@ const addEventFav = (contato) => {
     if (btnFav.dataset.fav == 'false') {
         btnFav.onmouseover = () => {
 
-            imgfav.src = 'src/images/favorite.svg'
+            imgfav.src = imgFav
         }
         btnFav.onmouseout = () => {
-            imgfav.src = 'src/images/favorite_border.svg'
+            imgfav.src = imgNotFav
         }
     } else {
         btnFav.onmouseover = () => {
-            imgfav.src = 'src/images/favorite_border.svg'
+            imgfav.src = imgNotFav
         }
         btnFav.onmouseout = () => {
-            imgfav.src = 'src/images/favorite.svg'
+            imgfav.src = imgFav
         }
     }
 }
@@ -180,6 +195,8 @@ const addEventEditar = (contato) => {
     const btnEdit = document.getElementById('btn-edit' + contato.id)
     btnEdit.onclick = () => {
         modal.style.display = 'block';
+        modalDetalheContato.style.display = "none"
+        divShadow.style.display = 'block'
         modal.setAttribute('data-modo', 'edit')
         titulo.textContent = 'Editar Contato';
         completeForm(contato);
@@ -204,4 +221,46 @@ const addEventComments = (contato) => {
 
 }
 
-export { addEventComments, addEventDeletar, addEventEditar, addEventFav, addEventUpdateFav }
+//adiciona evendo de abrir a modal quando clicado no nome de um contato
+const addEventContact = (contato) => {
+
+    const nameContact = document.getElementById('name' + contato.id)
+    const spanContacts = document.getElementsByClassName('close-details')[0]
+
+    nameContact.onclick = () => {
+        modalDetalheContato.style.display = 'block'
+        divShadow.style.display = 'block'
+        const imgContact = document.getElementById('imgContact')
+        const nameContact = document.getElementById('nameContact')
+        const emailContact = document.getElementById('emailContact')
+        const telContact = document.getElementById('telContact')
+        const addressContact = document.getElementById('addressContact')
+        const genderContact = document.getElementById('genderContact')
+        const empresaContact = document.getElementById('empresaContact')
+        const commentsContact = document.getElementById('commentsContact')
+        const btnExclude = document.getElementsByClassName('btn-exclude-details')[0]
+        const btnEdit = document.getElementsByClassName('btn-edit-details')[0]
+        const btnFav = document.getElementsByClassName('btn-fav-details')[0]
+        imgContact.src = contato.info.avatar
+        nameContact.textContent = contato.firstName + " " + contato.lastName
+        emailContact.textContent = 'Email: ' + contato.email
+        telContact.textContent = 'Telefone: ' + contato.info.phone
+        addressContact.textContent = 'Endereço: ' + contato.info.address
+        genderContact.textContent = 'Genero: ' + contato.gender
+        empresaContact.textContent = 'Empresa: ' + contato.info.company
+        commentsContact.textContent = 'Comentários: ' + contato.info.comments
+        btnExclude.setAttribute('id', 'btn-exclude' + contato.id)
+        btnEdit.setAttribute('id', 'btn-edit' + contato.id)
+        btnFav.setAttribute('id', 'btn-fav' + contato.id)
+        addEventFav(contato)
+        addEventDeletar(contato)
+        addEventEditar(contato)
+        addEventUpdateFav(contato)
+    }
+    spanContacts.onclick = () => {
+        modalDetalheContato.style.display = 'none'
+        divShadow.style.display = 'none'
+    }
+}
+
+export { addEventComments, addEventDeletar, addEventEditar, addEventFav, addEventUpdateFav, addEventContact }

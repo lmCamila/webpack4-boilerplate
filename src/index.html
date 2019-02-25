@@ -9,7 +9,7 @@
 </head>
 
 <body id="body">
-    
+
     <header>
         <nav class="menu">
             <div>
@@ -39,7 +39,7 @@
             </div>
         </nav>
     </header>
-    
+
     <section class="contacts">
         <div id="listContact" class="list">
             <div class="filter">
@@ -49,6 +49,7 @@
                     <option value="favorites">favoritos</option>
                 </select>
             </div>
+            <div class='loader'></div>
         </div>
         <div class="pagination">
             <ul>
@@ -62,7 +63,7 @@
             <span class="close">&times;</span>
             <div class="new-contact">
 
-                <form id="form-new-edit" action="#" method="POST">
+                <form id="form-new-edit" action="" >
                     <h1 id="new-title">Novo contato</h1>
                     <input type='hidden' name="id" id="id">
                     <div>
@@ -142,6 +143,34 @@
             <div class="layout-coments">
                 <h3>Comentários:</h3>
                 <p id="comment-description"></p>
+            </div>
+        </div>
+    </section>
+    <section>
+        <div id="detail-contact" >
+            <span class="close-details">&times;</span>
+            <div class="layout-details">
+                <input type="hidden" id="idContact">
+                <div class="div-img">
+                    <img id='imgContact'>
+                </div>
+                <div>
+                    <h3 id="nameContact"></h3>
+                    <p id="emailContact"></p>
+                    <p id="telContact"></p>
+                    <p id="addressContact"></p>
+                    <p id="genderContact"></p>
+                    <p id="empresaContact"></p>
+                    <p id="commentsContact"></p>
+                </div>
+                <div class="edit-exclude">
+                    <button class="btn-fav btn-fav-details" ><img id='imgfav' src="images/favorite_border.svg" /></button>
+                    <button class="btn-edit-exclude btn-edit-details" ><img src="images/baseline-edit-24px.svg"
+                            alt=""></button>
+                    <button  class="btn-edit-exclude btn-exclude-details" ><img src="images/round-delete_outline-24px.svg"
+                            alt=""></button>
+
+                </div>
             </div>
         </div>
     </section>

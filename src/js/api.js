@@ -1,5 +1,6 @@
 import { _ } from '../index.js'
 import{ filterContacts } from './filter.js'
+import{ verifyLoader } from './view.js'
 
 //carrega os contatos da api
 const loadContacts = async () => {
@@ -16,8 +17,10 @@ const loadContacts = async () => {
             }
             return 0
         }),
-        favs: _.chunk(data.filter(filterContacts), 10)
+        favs: _.chunk(data.filter(filterContacts), 10),
+        loading: false
     }
+    verifyLoader()
 }
 
 //model usado para construir body para as requisições

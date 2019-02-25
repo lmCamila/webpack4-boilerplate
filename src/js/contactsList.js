@@ -1,19 +1,27 @@
 import { createComponents, createDivs} from './view.js'
-import {addEventComments, addEventDeletar, addEventEditar, addEventFav, addEventUpdateFav} from './eventButton.js'
-import { isNullOrUndefined } from 'util';
+import {addEventComments, addEventDeletar, addEventEditar, addEventFav, addEventUpdateFav, addEventContact} from './eventButton.js'
+
+//imagens
+const imgMore = require('../images/more.svg')
+const imgFav = require('../images/favorite.svg')
+const imgNotFav = require('../images/favorite_border.svg')
+const imgEdit = require('../images/baseline-edit-24px.svg')
+const imgExclude = require('../images/round-delete_outline-24px.svg')
+const imgAvatarDefault = require('../images/avatar-default.jpg')
+
 const listContact = document.getElementById('listContact')
 //cria o contato no DOM e adciona os eventos 
 const montaContato = (contato) => {
     //componente de div coment
-    const btnComents = createComponents('button', 'src/images/more.svg', 'btn-coments', 'btn-coments' + contato.id)
+    const btnComents = createComponents('button', imgMore, 'btn-coments', 'btn-coments' + contato.id)
     //componentes de div edit-exclude
-    const btnfav = contato.isFavorite ? createComponents('button', 'src/images/favorite.svg', 'btn-fav', 'btn-fav' + contato.id) : createComponents('button', 'src/images/favorite_border.svg', 'btn-fav', 'btn-fav' + contato.id)
+    const btnfav = contato.isFavorite ? createComponents('button', imgFav, 'btn-fav', 'btn-fav' + contato.id) : createComponents('button', imgNotFav, 'btn-fav', 'btn-fav' + contato.id)
     btnfav.setAttribute('data-fav', contato.isFavorite)
-    const btnedit = createComponents('button', 'src/images/baseline-edit-24px.svg', 'btn-edit-exclude', 'btn-edit' + contato.id)
-    const btnexc = createComponents('button', 'src/images/round-delete_outline-24px.svg', 'btn-edit-exclude', 'btn-exclude' + contato.id)
+    const btnedit = createComponents('button', imgEdit, 'btn-edit-exclude', 'btn-edit' + contato.id)
+    const btnexc = createComponents('button',imgExclude, 'btn-edit-exclude', 'btn-exclude' + contato.id)
     //divs
-    const imgAvatar = !isNullOrUndefined(contato.info.avatar) ? contato.info.avatar : 'src/images/avatar-images.jpg'
-    const divImg = createDivs('div-img', createComponents('img', imgAvatar))
+    const imgAvatar =  createComponents('img', contato.info.avatar,'imgAvatar','img'+contato.id )
+    const divImg = createDivs('div-img', imgAvatar)
     const divNome = createDivs('div-name', createComponents('h3', contato.firstName + " " + contato.lastName),
         createComponents('p', 'Email: ' + contato.email), createComponents('p', 'Endereço: ' + contato.info.address),
         createComponents('p', 'Telefone: ' + contato.info.phone))
@@ -29,14 +37,38 @@ const montaContato = (contato) => {
     addEventEditar(contato)
     addEventComments(contato)
     addEventUpdateFav(contato)
+    addEventImg(contato)
 }
 
 //remove todos contatos da página
 const removeContactsList = () => {
-    const contatos = document.getElementsByClassName('contact')
+    const contact = document.getElementsByClassName('contact')
+    const contactRes = document.getElementsByClassName('contact-responsive')
+    const contatos = contact.length == 0 ? contactRes : contact
     for (let i = contatos.length - 1; i >= 0; i--) {
         contatos[i].remove();
     }
 }
 
-export{ removeContactsList, listContact,  montaContato}
+//cria label para contatos contendo somente os nomes
+const montarContatoResponsivo = (contato)=>{
+    const name = createComponents('h3', contato.firstName + " " + contato.lastName,'name','name'+contato.id)
+    const btnfav = contato.isFavorite ? createComponents('button', imgFav, 'btn-fav', 'btn-fav' + contato.id) : createComponents('button', imgNotFav, 'btn-fav', 'btn-fav' + contato.id)
+    btnfav.setAttribute('data-fav', contato.isFavorite)
+     const divfav = createDivs('fav',btnfav)
+    const divContacts = createDivs('contact-responsive',name,divfav)
+    divContacts.setAttribute('id', contato.id)
+    listContact.appendChild(divContacts)
+    addEventContact(contato)
+    addEventFav(contato)
+    addEventUpdateFav(contato)
+}
+//caso ocorra um erro ao carregar uma img carregará uma default
+const addEventImg = (contato) =>{
+    const img = document.getElementById('img'+contato.id )
+    img.onerror = () =>{
+        img.src = imgAvatarDefault
+    }
+    
+}
+export{ removeContactsList, listContact,  montaContato, montarContatoResponsivo,  imgFav, imgNotFav}

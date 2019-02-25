@@ -1,6 +1,6 @@
 import { removeContactsList} from './contactsList.js'
 import{ createArrayPages } from './pagination.js'
-import{ render } from '../index.js'
+import{ verifySize } from './view.js'
 const select = document.getElementsByTagName('select')[0]
 
 //renderiza os contatos e adciona ao localStorage a preferência de filtro
@@ -9,12 +9,12 @@ select.onclick = () => {
         window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
         removeContactsList()
         createArrayPages()
-        render()
+        verifySize()
     } else if (select.selectedIndex == 1) {
         window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
         removeContactsList()
         createArrayPages()
-        render()
+        verifySize()
     }
 }
 
@@ -39,7 +39,7 @@ const searchContacts = () => {
     searchFilter = searchFilter.replace(new RegExp('(ó|ò|õ|Ò|Ó|Õ)', 'gi'), 'o')
     searchFilter = searchFilter.replace(new RegExp('(ú|ù|Ú|Ù)', 'gi'), 'u')
     searchFilter = searchFilter.replace(new RegExp('(ç|Ç)', 'gi'), 'c')
-    const patern = `^${searchFilter}.*`
+    const patern = `^${searchFilter}`
 
     return contacts.filter(c => new RegExp(patern, 'gi').test(c.firstName));
 }
@@ -53,7 +53,7 @@ search.onkeyup = ({ target: { value } }) => {
     }
 
     removeContactsList()
-    render()
+    verifySize()
 
 }
 
