@@ -1,7 +1,7 @@
 import { rideModel, loadContacts, sendUpdate, deleteContact, getContactUrl, sendNew } from './api.js'
 import { searchContacts } from './filter.js'
 import { completeForm, validateEmail, validateLength } from './form.js'
-import { removeContactsList, imgFav, imgNotFav } from './contactsList.js'
+import { removeContactsList, imgFav, imgNotFav, addEventImg } from './contactsList.js'
 import { uploadFile } from './upload.js'
 import { verifySize } from './view.js';
 
@@ -227,7 +227,7 @@ const addEventContact = (contato) => {
         modalDetalheContato.style.display = 'block'
         divShadow.style.display = 'block'
         
-        const imgContact = document.getElementById('imgContact')
+        const imgContact = document.getElementsByClassName('imgContact')[0]
         const nameContact = document.getElementById('nameContact')
         const emailContact = document.getElementById('emailContact')
         const telContact = document.getElementById('telContact')
@@ -250,12 +250,14 @@ const addEventContact = (contato) => {
         btnEdit.setAttribute('id', 'btn-edit' + contato.id)
         btnFav.setAttribute('id', 'btn-fav' + contato.id +'modal')
         btnFav.setAttribute('data-fav', contato.isFavorite)
+        imgContact.setAttribute('id','img'+contato.id )
         const imBtnFav = document.getElementById('btn-fav'+contato.id+'modal').childNodes[0]
         contato.isFavorite ? imBtnFav.src = imgFav : imBtnFav.src = imgNotFav
         addEventFav(contato,'btn-fav' + contato.id +'modal')
         addEventDeletar(contato)
         addEventEditar(contato)
         addEventUpdateFav(contato,'btn-fav' + contato.id +'modal')
+        addEventImg(contato)
     }
     spanContacts.onclick = () => {
         modalDetalheContato.style.display = 'none'

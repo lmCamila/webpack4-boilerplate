@@ -71,4 +71,4 @@ const addEventImg = (contato) =>{
     }
     
 }
-export{ removeContactsList, listContact,  montaContato, montarContatoResponsivo,  imgFav, imgNotFav}
+export{ removeContactsList, listContact,  montaContato, montarContatoResponsivo, addEventImg, imgFav, imgNotFav}
