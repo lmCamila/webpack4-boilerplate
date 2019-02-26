@@ -32,11 +32,11 @@ const montaContato = (contato) => {
     const divContacts = createDivs('contact', divImg, divNome, divInfos, divEditExclude)
     divContacts.setAttribute('data-id', contato.id)
     listContact.appendChild(divContacts)
-    addEventFav(contato)
+    addEventFav(contato,'btn-fav' + contato.id)
     addEventDeletar(contato)
     addEventEditar(contato)
     addEventComments(contato)
-    addEventUpdateFav(contato)
+    addEventUpdateFav(contato, 'btn-fav' + contato.id)
     addEventImg(contato)
 }
 
@@ -60,8 +60,8 @@ const montarContatoResponsivo = (contato)=>{
     divContacts.setAttribute('id', contato.id)
     listContact.appendChild(divContacts)
     addEventContact(contato)
-    addEventFav(contato)
-    addEventUpdateFav(contato)
+    addEventFav(contato,'btn-fav' + contato.id)
+    addEventUpdateFav(contato,'btn-fav' + contato.id)
 }
 //caso ocorra um erro ao carregar uma img carregará uma default
 const addEventImg = (contato) =>{

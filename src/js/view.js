@@ -37,12 +37,12 @@ const createDivs = (classe, ...args) => {
 //verifica o tamanho da tela e troca a maneira de renderizar os componentes
 const verifySize = () => {
     const widthList = window.innerWidth
-    if (widthList < 890) {
+    if (widthList < 1424) {
         removeContactsList()
         render(true)
     } else {
         removeContactsList()
-        render()
+        render(false)
     }
 }
 

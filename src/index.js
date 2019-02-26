@@ -20,7 +20,7 @@ window.state = {
 
 verifyLoader();
 
-const render = (montarResponsivo = false) => {
+const render = (montarResponsivo ) => {
     const { contacts, favs, currentPage, search } = window.state
     let listContacts = localStorage.getItem('filter') === 'favorites' ? favs : _.chunk(contacts, 10)
     listContacts = search != '' ? _.chunk(searchContacts(), 10) : listContacts

@@ -4,7 +4,7 @@ import { completeForm, validateEmail, validateLength } from './form.js'
 import { removeContactsList, imgFav, imgNotFav } from './contactsList.js'
 import { uploadFile } from './upload.js'
 import { verifySize } from './view.js';
-import { render } from '../index.js';
+
 const modalDetalheContato = document.getElementById('detail-contact')
 const avatarInput = document.getElementById('avatar')
 const titulo = document.getElementById('new-title');
@@ -70,7 +70,6 @@ btnEnviar.onclick = () => {
         msgSuccess = "Contato cadastrado com sucesso"
         sendNew(body).then((res) => {
             if (res.status == 200) {
-                console.log(res)
                 alert(msgSuccess)
                 loadContacts().then(() => {
                     verifySize()
@@ -78,7 +77,6 @@ btnEnviar.onclick = () => {
                 })
             } else if (res.status == 400) {
                 alert('Erro, não foi possivel concluir essa ação.')
-                console.log(res)
             }
         })
     } else if (modal.dataset.modo == 'edit') {
@@ -103,9 +101,9 @@ btnEnviar.onclick = () => {
 }
 
 //adciona evento onclick para favoritar contato
-const addEventUpdateFav = contato => {
-    const btnFav = document.getElementById('btn-fav' + contato.id)
-    const imgfav = document.getElementById('img-fav' + contato.id)
+const addEventUpdateFav = (contato,btnId) => {
+    const btnFav = document.getElementById(btnId)
+    const imgfav = document.getElementById(btnId).childNodes[0]
     btnFav.onclick = () => {
         let isFav = true
         let newSrc = ''
@@ -144,21 +142,19 @@ const addEventUpdateFav = contato => {
 const addEventDeletar = (contato) => {
     const btnExclude = document.getElementById('btn-exclude' + contato.id);
     const id = contato.id
-    console.log(id)
-    console.log(window.state.contacts)
+   
     btnExclude.onclick = () => {
         if (confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`)) {
             deleteContact(contato.id).then((res) => {
-                console.log(window.state.contacts)
                 if (res.status == 200) {
-                    console.log(window.state.contacts.filter((c) => c.id !== id))
                     window.state = {
                         ...window.state,
                         contacts: window.state.contacts.filter((c) => c.id !== id)
                     }
-                    console.log(window.state.contacts)
                     alert('Contato excluído com sucesso!')
-                    verifySize()                   
+                    verifySize()    
+                    divShadow.style.display = 'none' 
+                    modalDetalheContato.style.display = 'none'              
                 } else if (res.status == 400) {
                     alert('Erro, contato não excluído!')
                 }
@@ -169,8 +165,8 @@ const addEventDeletar = (contato) => {
 
 
 //add hover aos botões de favoritos
-const addEventFav = (contato) => {
-    const btnFav = document.getElementById('btn-fav' + contato.id)
+const addEventFav = (contato, btnId) => {
+    const btnFav = document.getElementById(btnId)
     const imgfav = document.getElementById('img-fav' + contato.id)
     if (btnFav.dataset.fav == 'false') {
         btnFav.onmouseover = () => {
@@ -230,6 +226,7 @@ const addEventContact = (contato) => {
     nameContact.onclick = () => {
         modalDetalheContato.style.display = 'block'
         divShadow.style.display = 'block'
+        
         const imgContact = document.getElementById('imgContact')
         const nameContact = document.getElementById('nameContact')
         const emailContact = document.getElementById('emailContact')
@@ -251,11 +248,14 @@ const addEventContact = (contato) => {
         commentsContact.textContent = 'Comentários: ' + contato.info.comments
         btnExclude.setAttribute('id', 'btn-exclude' + contato.id)
         btnEdit.setAttribute('id', 'btn-edit' + contato.id)
-        btnFav.setAttribute('id', 'btn-fav' + contato.id)
-        addEventFav(contato)
+        btnFav.setAttribute('id', 'btn-fav' + contato.id +'modal')
+        btnFav.setAttribute('data-fav', contato.isFavorite)
+        const imBtnFav = document.getElementById('btn-fav'+contato.id+'modal').childNodes[0]
+        contato.isFavorite ? imBtnFav.src = imgFav : imBtnFav.src = imgNotFav
+        addEventFav(contato,'btn-fav' + contato.id +'modal')
         addEventDeletar(contato)
         addEventEditar(contato)
-        addEventUpdateFav(contato)
+        addEventUpdateFav(contato,'btn-fav' + contato.id +'modal')
     }
     spanContacts.onclick = () => {
         modalDetalheContato.style.display = 'none'
