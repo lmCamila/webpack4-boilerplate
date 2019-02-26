@@ -1,9 +1,10 @@
 import { rideModel, loadContacts, sendUpdate, deleteContact, getContactUrl, sendNew } from './api.js'
-import { searchContacts } from './filter.js'
+import { searchContacts,filterContacts } from './filter.js'
 import { completeForm, validateEmail, validateLength } from './form.js'
 import { removeContactsList, imgFav, imgNotFav, addEventImg } from './contactsList.js'
 import { uploadFile } from './upload.js'
 import { verifySize } from './view.js';
+import { _ } from '../index.js'
 
 const modalDetalheContato = document.getElementById('detail-contact')
 const avatarInput = document.getElementById('avatar')
@@ -131,6 +132,10 @@ const addEventUpdateFav = (contato, btnId) => {
                     const results = window.state.contacts.filter((c) => c.id == contato.id)
                     const pos = window.state.contacts.indexOf(results[0])
                     window.state.contacts.splice(pos, 1, response)
+                    window.state = {
+                        ...window.state,
+                        favs: _.chunk(window.state.contacts.filter(filterContacts), 10)
+                    }
                     removeContactsList()
                     verifySize()
                 })
