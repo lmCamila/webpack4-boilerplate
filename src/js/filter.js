@@ -56,7 +56,17 @@ search.onkeyup = ({ target: { value } }) => {
     verifySize()
 
 }
+const searchDropdown = document.getElementById('search-dropdown')
+searchDropdown.onkeyup= ({ target: { value } }) => {
+    window.state = {
+        ...window.state,
+        search: value
+    }
 
+    removeContactsList()
+    verifySize()
+
+}
 //retorna um array com os contatos favoritos
 const filterContacts = (obj) => obj.isFavorite;
 

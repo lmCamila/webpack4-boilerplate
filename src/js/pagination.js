@@ -23,12 +23,12 @@ const createArrayPages = () => {
 }
 
 //monta o array de páginas adcionando itens ao html
-const montarPaginacao = () => {
+const makePaging = () => {
     const lista = document.getElementsByTagName('ul')[0]
-    const itens = document.getElementsByTagName('li')
+    const items = document.getElementsByTagName('li')
     for (let i = 0; i < window.state.pages[window.state.currentArray].length; i++) {
         const item = createComponents('li', window.state.pages[window.state.currentArray][i], 'page', window.state.pages[window.state.currentArray][i])
-        lista.insertBefore(item, itens[itens.length - 1])
+        lista.insertBefore(item, items[items.length - 1])
         addEventPaginacao(window.state.pages[window.state.currentArray][i])
     }
 }
@@ -86,7 +86,7 @@ btnBack.onclick = () => {
         }
         removeContactsList()
         removePageList()
-        montarPaginacao()
+        makePaging()
         verifySize()
     }
     document.getElementById(window.state.currentPage).classList.add('currentPage')
@@ -122,7 +122,7 @@ btnForward.onclick = () => {
         }
         removeContactsList()
         removePageList()
-        montarPaginacao()
+        makePaging()
         verifySize()
     }
     document.getElementById(window.state.currentPage).classList.add('currentPage')
@@ -137,4 +137,4 @@ const calculateControl = () => {
     return (window.state.currentPage / array) / 6
 }
 
-export{ createArrayPages, montarPaginacao, removePageList }
+export{ createArrayPages, makePaging, removePageList }

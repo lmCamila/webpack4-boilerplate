@@ -2,33 +2,33 @@ import { removeContactsList } from "./contactsList";
 import { render } from "..";
 
 //cria os componentes html 
-const createComponents = (element, conteudo, classe = 'undefined', id = 'undefined') => {
+const createComponents = (element, content, classElement = 'undefined', id = 'undefined') => {
     const elemento = document.createElement(element)
-    if (classe != 'undefined') {
-        elemento.classList.add(classe)
+    if (classElement != 'undefined') {
+        elemento.classList.add(classElement)
     }
     if (id != 'undefined') {
         elemento.setAttribute('id', id)
     }
     if (element == 'img') {
-        elemento.src = conteudo
+        elemento.src = content
         return elemento
     }
     if (element == 'button') {
         const imgEx = document.createElement('img')
         imgEx.setAttribute('id', 'img-fav' + id.substr(7, id.length));
-        imgEx.src = conteudo
+        imgEx.src = content
         elemento.appendChild(imgEx)
         return elemento
     }
-    elemento.textContent = conteudo
+    elemento.textContent = content
     return elemento
 }
 //cria as divs
-const createDivs = (classe, ...args) => {
+const createDivs = (classElement, ...args) => {
     const arg = Array.from(args);
     const div = document.createElement('div')
-    div.classList.add(classe)
+    div.classList.add(classElement)
     for (let i = 0; i < arg.length; i++) {
         div.appendChild(arg[i])
     }

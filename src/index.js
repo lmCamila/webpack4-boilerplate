@@ -1,10 +1,10 @@
 /* eslint-disable func-style */
 import './index.css';
-import { listContact,  montaContato, montarContatoResponsivo} from './js/contactsList.js'
+import { listContact,  makeContact, makeResponsiveContact} from './js/contactsList.js'
 import { createComponents, createDivs, verifySize, verifyLoader} from './js/view.js'
 import { loadContacts } from './js/api.js'
 import { searchContacts, modifyFilterSelect} from './js/filter.js'
-import { createArrayPages, montarPaginacao, removePageList } from './js/pagination.js'
+import { createArrayPages, makePaging, removePageList } from './js/pagination.js'
 const _ = require('lodash/array')
 
 window.state = {
@@ -20,22 +20,22 @@ window.state = {
 
 verifyLoader();
 
-const render = (montarResponsivo ) => {
+const render = (makeResponsive) => {
     const { contacts, favs, currentPage, search } = window.state
     let listContacts = localStorage.getItem('filter') === 'favorites' ? favs : _.chunk(contacts, 10)
     listContacts = search != '' ? _.chunk(searchContacts(), 10) : listContacts
     modifyFilterSelect()
     if (listContacts != null && listContacts.length != 0) {
         for (let i = 0; i < listContacts[currentPage - 1].length; i++) {
-           if(montarResponsivo == true){
-            montarContatoResponsivo(listContacts[currentPage - 1][i])
+           if(makeResponsive == true){
+            makeResponsiveContact(listContacts[currentPage - 1][i])
            }else{
-            montaContato(listContacts[currentPage - 1][i])
+            makeContact(listContacts[currentPage - 1][i])
            }
         }
         createArrayPages()
         removePageList()
-        montarPaginacao()
+        makePaging()
     } else {
         const notice = createComponents('p', 'Não encontrei nenhum contato com este nome!  ):', 'notice')
         const divNotice = createDivs('contact', notice)

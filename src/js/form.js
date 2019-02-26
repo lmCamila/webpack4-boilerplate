@@ -6,10 +6,10 @@ const lastNameInput = document.getElementById('lastName')
 const emailInput = document.getElementById('email')
 const genFemInput = document.getElementById('cFem')
 const genMascInput = document.getElementById('cMasc')
-const empresaInput = document.getElementById('company')
-const enderecoInput = document.getElementById('address')
-const telefoneInput = document.getElementById('phone')
-const comentariosInput = document.getElementById('comment')
+const companyInput = document.getElementById('company')
+const addressInput = document.getElementById('address')
+const phoneInput = document.getElementById('phone')
+const commentsInput = document.getElementById('comment')
 
 //valida no momento da digitação os campos abaixo
 firstNameInput.onkeyup = ({ target: { value } }) => {
@@ -39,31 +39,30 @@ emailInput.onkeyup = ({ target: { value } }) => {
     }
 }
 
-empresaInput.onkeyup = ({ target: { value } }) => {
-    if (!validateLength(value, empresaInput)) {
+companyInput.onkeyup = ({ target: { value } }) => {
+    if (!validateLength(value, companyInput)) {
         return
     } else {
-        empresaInput.style.backgroundColor = "#FFFFFF"
-        empresaInput.style.border = "none"
+        companyInput.style.backgroundColor = "#FFFFFF"
+        companyInput.style.border = "none"
     }
 }
 
-enderecoInput.onkeyup = ({ target: { value } }) => {
-    if (!validateLength(value, enderecoInput)) {
+addressInput.onkeyup = ({ target: { value } }) => {
+    if (!validateLength(value, addressInput)) {
         return
     } else {
-        enderecoInput.style.backgroundColor = "#FFFFFF"
-        enderecoInput.style.border = "none"
+        addressInput.style.backgroundColor = "#FFFFFF"
+        addressInput.style.border = "none"
     }
 }
 
-telefoneInput.onkeyup = ({ target: { value } }) => {
-    console.log(value)
-    if (!validateLength(value, telefoneInput)) {
+phoneInput.onkeyup = ({ target: { value } }) => {
+    if (!validateLength(value, phoneInput)) {
         return
     } else {
-        telefoneInput.style.backgroundColor = "#FFFFFF"
-        telefoneInput.style.border = "none"
+        phoneInput.style.backgroundColor = "#FFFFFF"
+        phoneInput.style.border = "none"
     }
 }
 
@@ -93,18 +92,18 @@ const validateLength = (value, input) => {
 }
 
 //completa formulário de edição com as informações do contato
-const completeForm = (contato) => {
-    id.value = contato.id
-    contato.isFavorite ? favorite.checked = true : favorite.checked = false
-    avatarInput.setAttribute('data-url', contato.info.avatar)
-    firstNameInput.value = contato.firstName
-    lastNameInput.value = contato.lastName
-    emailInput.value = contato.email
-    contato.gender == 'f' ? genFemInput.setAttribute('checked', 'yes') : genMascInput.setAttribute('checked', 'yes')
-    empresaInput.value = contato.info.company
-    enderecoInput.value = contato.info.address
-    telefoneInput.value = contato.info.phone
-    comentariosInput.value = contato.info.comments
+const completeForm = (contact) => {
+    id.value = contact.id
+    contact.isFavorite ? favorite.checked = true : favorite.checked = false
+    avatarInput.setAttribute('data-url', contact.info.avatar)
+    firstNameInput.value = contact.firstName
+    lastNameInput.value = contact.lastName
+    emailInput.value = contact.email
+    contact.gender == 'f' ? genFemInput.setAttribute('checked', 'yes') : genMascInput.setAttribute('checked', 'yes')
+    companyInput.value = contact.info.company
+    addressInput.value = contact.info.address
+    phoneInput.value = contact.info.phone
+    commentsInput.value = contact.info.comments
 }
 
 export { completeForm, validateLength, validateEmail }

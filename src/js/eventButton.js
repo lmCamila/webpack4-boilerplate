@@ -43,33 +43,33 @@ btnEnviar.onclick = () => {
     const lastNameInput = document.getElementById('lastName')
     const emailInput = document.getElementById('email')
     const genFemInput = document.getElementById('cFem').checked
-    const empresaInput = document.getElementById('company')
-    const enderecoInput = document.getElementById('address')
-    const telefoneInput = document.getElementById('phone')
-    const comentariosInput = document.getElementById('comment').value
+    const companyInput = document.getElementById('company')
+    const addressInput = document.getElementById('address')
+    const phoneInput = document.getElementById('phone')
+    const commentsInput = document.getElementById('comment').value
     const url = avatarInput.dataset.url
 
     const gen = genFemInput ? "f" : "m"
     let msgSuccess = " "
 
-    if(!validateLength(firstNameInput.value,firstNameInput) ||
-    !validateLength(lastNameInput.value,lastNameInput) ||
-    !validateEmail(emailInput.value) ||
-    !validateLength(empresaInput.value,empresaInput) ||
-    !validateLength(enderecoInput.value,enderecoInput)||
-    !validateLength(telefoneInput.value, telefoneInput)){
+    if (!validateLength(firstNameInput.value, firstNameInput) ||
+        !validateLength(lastNameInput.value, lastNameInput) ||
+        !validateEmail(emailInput.value) ||
+        !validateLength(companyInput.value, companyInput) ||
+        !validateLength(addressInput.value, addressInput) ||
+        !validateLength(phoneInput.value, phoneInput)) {
         return
     }
     //firstName lastName email telefone empresa endereco
     const body = rideModel(firstNameInput.value, lastNameInput.value, emailInput.value, gen, favorite,
-        empresaInput.value, url, enderecoInput.value, telefoneInput.value,
-        comentariosInput)
+        companyInput.value, url, addressInput.value, phoneInput.value,
+        commentsInput)
 
     //verifica modo da modal e faz requisição
     if (modal.dataset.modo == 'new') {
         msgSuccess = "Contato cadastrado com sucesso"
         sendNew(body).then((res) => {
-            if (res.status == 200) {
+            if (res.status == 201) {
                 alert(msgSuccess)
                 loadContacts().then(() => {
                     verifySize()
@@ -78,6 +78,8 @@ btnEnviar.onclick = () => {
             } else if (res.status == 400) {
                 alert('Erro, não foi possivel concluir essa ação.')
             }
+            modal.style.display = 'none';
+            divShadow.style.display = 'none'
         })
     } else if (modal.dataset.modo == 'edit') {
         msgSuccess = "Contato alterado com sucesso"
@@ -94,16 +96,17 @@ btnEnviar.onclick = () => {
             } else if (res.status == 400) {
                 alert('Erro, não foi possivel concluir essa ação.')
             }
+            modal.style.display = 'none';
+            divShadow.style.display = 'none'
         })
     }
-    modal.style.display = 'none';
-    divShadow.style.display = 'none'
+
 }
 
 //adciona evento onclick para favoritar contato
-const addEventUpdateFav = (contato,btnId) => {
+const addEventUpdateFav = (contato, btnId) => {
     const btnFav = document.getElementById(btnId)
-    const imgfav = document.getElementById(btnId).childNodes[0]
+    const imgFavorite = document.getElementById(btnId).childNodes[0]
     btnFav.onclick = () => {
         let isFav = true
         let newSrc = ''
@@ -123,7 +126,7 @@ const addEventUpdateFav = (contato,btnId) => {
 
         sendUpdate(body, contato.id).then((res) => {
             if (res.status == 200) {
-                imgfav.src = newSrc
+                imgFavorite.src = newSrc
                 getContactUrl(res.url).then((response) => {
                     const results = window.state.contacts.filter((c) => c.id == contato.id)
                     const pos = window.state.contacts.indexOf(results[0])
@@ -139,10 +142,10 @@ const addEventUpdateFav = (contato,btnId) => {
 }
 
 //adiciona evento ao botão deletar 
-const addEventDeletar = (contato) => {
+const addEventDelete = (contato) => {
     const btnExclude = document.getElementById('btn-exclude' + contato.id);
     const id = contato.id
-   
+
     btnExclude.onclick = () => {
         if (confirm(`Deseja mesmo excluir ${contato.firstName} ${contato.lastName}?`)) {
             deleteContact(contato.id).then((res) => {
@@ -152,9 +155,9 @@ const addEventDeletar = (contato) => {
                         contacts: window.state.contacts.filter((c) => c.id !== id)
                     }
                     alert('Contato excluído com sucesso!')
-                    verifySize()    
-                    divShadow.style.display = 'none' 
-                    modalDetalheContato.style.display = 'none'              
+                    verifySize()
+                    divShadow.style.display = 'none'
+                    modalDetalheContato.style.display = 'none'
                 } else if (res.status == 400) {
                     alert('Erro, contato não excluído!')
                 }
@@ -167,27 +170,27 @@ const addEventDeletar = (contato) => {
 //add hover aos botões de favoritos
 const addEventFav = (contato, btnId) => {
     const btnFav = document.getElementById(btnId)
-    const imgfav = document.getElementById('img-fav' + contato.id)
+    const imgFavorite = document.getElementById('img-fav' + contato.id)
     if (btnFav.dataset.fav == 'false') {
         btnFav.onmouseover = () => {
 
-            imgfav.src = imgFav
+            imgFavorite.src = imgFav
         }
         btnFav.onmouseout = () => {
-            imgfav.src = imgNotFav
+            imgFavorite.src = imgNotFav
         }
     } else {
         btnFav.onmouseover = () => {
-            imgfav.src = imgNotFav
+            imgFavorite.src = imgNotFav
         }
         btnFav.onmouseout = () => {
-            imgfav.src = imgFav
+            imgFavorite.src = imgFav
         }
     }
 }
 
 //adiciona evento ao botão editar de cada contato
-const addEventEditar = (contato) => {
+const addEventEdit = (contato) => {
     const btnEdit = document.getElementById('btn-edit' + contato.id)
     btnEdit.onclick = () => {
         modal.style.display = 'block';
@@ -226,7 +229,7 @@ const addEventContact = (contato) => {
     nameContact.onclick = () => {
         modalDetalheContato.style.display = 'block'
         divShadow.style.display = 'block'
-        
+
         const imgContact = document.getElementsByClassName('imgContact')[0]
         const nameContact = document.getElementById('nameContact')
         const emailContact = document.getElementById('emailContact')
@@ -248,15 +251,15 @@ const addEventContact = (contato) => {
         commentsContact.textContent = 'Comentários: ' + contato.info.comments
         btnExclude.setAttribute('id', 'btn-exclude' + contato.id)
         btnEdit.setAttribute('id', 'btn-edit' + contato.id)
-        btnFav.setAttribute('id', 'btn-fav' + contato.id +'modal')
+        btnFav.setAttribute('id', 'btn-fav' + contato.id + 'modal')
         btnFav.setAttribute('data-fav', contato.isFavorite)
-        imgContact.setAttribute('id','img'+contato.id )
-        const imBtnFav = document.getElementById('btn-fav'+contato.id+'modal').childNodes[0]
+        imgContact.setAttribute('id', 'img' + contato.id)
+        const imBtnFav = document.getElementById('btn-fav' + contato.id + 'modal').childNodes[0]
         contato.isFavorite ? imBtnFav.src = imgFav : imBtnFav.src = imgNotFav
-        addEventFav(contato,'btn-fav' + contato.id +'modal')
-        addEventDeletar(contato)
-        addEventEditar(contato)
-        addEventUpdateFav(contato,'btn-fav' + contato.id +'modal')
+        addEventFav(contato, 'btn-fav' + contato.id + 'modal')
+        addEventDelete(contato)
+        addEventEdit(contato)
+        addEventUpdateFav(contato, 'btn-fav' + contato.id + 'modal')
         addEventImg(contato)
     }
     spanContacts.onclick = () => {
@@ -265,4 +268,4 @@ const addEventContact = (contato) => {
     }
 }
 
-export { addEventComments, addEventDeletar, addEventEditar, addEventFav, addEventUpdateFav, addEventContact }
+export { addEventComments, addEventDelete, addEventEdit, addEventFav, addEventUpdateFav, addEventContact }

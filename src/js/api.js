@@ -9,10 +9,10 @@ const loadContacts = async () => {
     window.state = {
         ...window.state,
         contacts: data.sort((a, b) => {
-            if (a.firstName > b.firstName) {
+            if (a.firstName.toLowerCase() > b.firstName.toLowerCase()) {
                 return 1
             }
-            if (a.firstName < b.firstName) {
+            if (a.firstName.toLowerCase() < b.firstName.toLowerCase()) {
                 return -1
             }
             return 0
@@ -66,6 +66,7 @@ const sendNew = async (body) => {
     }
     const response = await fetch(`http://contacts-api.azurewebsites.net/api/contacts`, fetchConf)
     return response
+    
 }
 
 //envia requisição para deletar contato

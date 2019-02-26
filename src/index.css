@@ -187,7 +187,7 @@ body{
     position: fixed;
     color:rgba(32, 2, 2, 0.973);
     font-size: 28px;
-    float: right;
+   
     top:3%;
     right: 13%;
     font-weight: bold;
@@ -197,7 +197,7 @@ body{
     position: fixed;
     color:rgba(32, 2, 2, 0.973);
     font-size: 28px;
-    float: right;
+  
     top:15px;
     right: 5%;
     font-weight: bold;
@@ -232,7 +232,7 @@ body{
     position: fixed;
     color:rgba(32, 2, 2, 0.973);
     font-size: 28px;
-    float: right;
+   
     top:3%;
     right: 13%;
     font-weight: bold;
@@ -377,7 +377,6 @@ body{
 footer{
     display: inline-block;
     position: fixed;
-    float: right;
     bottom: 3%;
     right: 3%;
 }
@@ -433,16 +432,22 @@ footer{
 .contact-responsive{
     display: flex;
     justify-content: space-between;
-    margin: 0% 5% 0% 5%;
+    margin: 0% ;
     border-bottom: 1px solid rgba(7, 7, 7, 0.192);
 }
 .contact-responsive button{
+   
     padding: 12px 14px 12px 14px;
     border: none;
     cursor: pointer;
+    margin-top:28%;
+    margin-left: -22%;
     border-radius: 50%;
     box-shadow:0px 4px 8px 0px rgba(7, 7, 7, 0.192);
     background-color:#FFFFFF;
+}
+.contact-responsive h3{
+    padding: 2% 45% 2% 2%;
 }
 
 #detail-contact{
@@ -487,7 +492,6 @@ footer{
     footer{
         display: inline-block;
         position: fixed;
-        float: right;
         bottom: 1%;
         right: 1%;
     }
@@ -581,7 +585,6 @@ footer{
     footer{
         display: inline-block;
         position: fixed;
-        float: right;
         bottom: 1%;
         right: 1%;
     }
@@ -603,7 +606,6 @@ footer{
         position: fixed;
         color:rgba(32, 2, 2, 0.973);
         font-size: 28px;
-        float: right;
         top:3%;
         right: 5%;
         font-weight: bold;
