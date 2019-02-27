@@ -61,7 +61,7 @@ const addEventPaginacao = (id) => {
 //adiciona evento de voltar para pagina anterior
 btnBack.onclick = () => {
     const control = (window.state.currentPage % 6)
-    let page = window.state.currentPage -1
+    const page = window.state.currentPage -1
     
     if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
         document.getElementById(window.state.currentPage).classList.remove('currentPage')
