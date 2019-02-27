@@ -10,7 +10,7 @@ const btnForward = document.getElementById('forward')
 //cria o array usado como base para paginação
 const createArrayPages = () => {
     const { contacts, favs, search } = window.state
-    let listContacts = localStorage.getItem('filter') === 'favorites' ? favs : _.chunk(contacts, 10)
+    let listContacts = localStorage.getItem('filter') == 'true' ? favs : _.chunk(contacts, 10)
     listContacts = search != '' ? _.chunk(searchContacts(), 10) : listContacts
     const arrayPages = []
     for (let i = 0; i < listContacts.length; i++) {
@@ -61,24 +61,24 @@ const addEventPaginacao = (id) => {
 //adiciona evento de voltar para pagina anterior
 btnBack.onclick = () => {
     const control = (window.state.currentPage % 6)
-    let page = 1
-
+    let page = window.state.currentPage -1
+    
     if (!isNullOrUndefined(document.getElementsByClassName('currentPage')[0])) {
         document.getElementById(window.state.currentPage).classList.remove('currentPage')
     }
     
-    if (window.state.currentPage != 1) {
-        page = window.state.currentPage - 1
+    if (page <= 1) {
+        return
     }
     window.state = {
         ...window.state,
         currentPage: page
     }
 
-    if (control > 0) {
+    if (control > 1) {
         removeContactsList()
         verifySize()
-    } else if (control == 0) {
+    } else if (control == 1) {
         const array = window.state.currentArray - 1
         window.state = {
             ...window.state,
@@ -94,6 +94,7 @@ btnBack.onclick = () => {
 
 //adciona evento de ir para próxima página 
 btnForward.onclick = () => {
+    const listContacts = localStorage.getItem('filter') == 'true' ? window.state.favs.length : _.chunk(window.state.contacts, 10).length
     const control = calculateControl()
     let page = parseInt(window.state.currentPage) + 1
 
@@ -101,8 +102,8 @@ btnForward.onclick = () => {
         document.getElementById(window.state.currentPage).classList.remove('currentPage')
     }
 
-    if (page > _.chunk(window.state.contacts, 10).length) {
-        page = _.chunk(window.state.contacts, 10).length
+    if (page > listContacts) {
+        page = listContacts
     }
 
     window.state = {
@@ -110,10 +111,10 @@ btnForward.onclick = () => {
         currentPage: page
     }
    
-    if (control <= 1) {
+    if (control < 1) {
         removeContactsList()
         verifySize()
-    } else if (control > 1) {
+    } else if (control >= 1) {
 
         const array = window.state.currentArray + 1
         window.state = {

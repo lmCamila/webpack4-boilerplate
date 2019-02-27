@@ -22,7 +22,7 @@ verifyLoader();
 
 const render = (makeResponsive) => {
     const { contacts, favs, currentPage, search } = window.state
-    let listContacts = localStorage.getItem('filter') === 'favorites' ? favs : _.chunk(contacts, 10)
+    let listContacts = localStorage.getItem('filter') == 'true' ? favs : _.chunk(contacts, 10)
     listContacts = search != '' ? _.chunk(searchContacts(), 10) : listContacts
     modifyFilterSelect()
     if (listContacts != null && listContacts.length != 0) {
@@ -44,6 +44,7 @@ const render = (makeResponsive) => {
 }
 
 loadContacts().then(() => {
+    
     verifySize()
     searchContacts()
 })

@@ -1,17 +1,25 @@
-import { removeContactsList} from './contactsList.js'
-import{ createArrayPages } from './pagination.js'
-import{ verifySize } from './view.js'
+import { removeContactsList } from './contactsList.js'
+import { createArrayPages } from './pagination.js'
+import { verifySize } from './view.js'
 const select = document.getElementsByTagName('select')[0]
 
 //renderiza os contatos e adciona ao localStorage a preferência de filtro
 select.onclick = () => {
     if (select.selectedIndex == 0) {
-        window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
+        window.localStorage.setItem('filter', false)
         removeContactsList()
         createArrayPages()
         verifySize()
     } else if (select.selectedIndex == 1) {
-        window.localStorage.setItem('filter', select.options[select.selectedIndex].value)
+        window.localStorage.setItem('filter', true)
+        if (window.state.currentArray < parseInt(window.state.favs.length) +1 ) {
+            window.state = {
+                ...window.state,
+                currentPage: 1,
+                currentArray: 0
+            }
+        }
+        
         removeContactsList()
         createArrayPages()
         verifySize()
@@ -22,9 +30,9 @@ select.onclick = () => {
 const modifyFilterSelect = () => {
     const option = localStorage.getItem('filter')
     const options = document.getElementsByTagName('option')
-    if (option === 'none') {
+    if (option == 'false') {
         options[0].setAttribute('selected', 'selected')
-    } else if (option === 'favorites') {
+    } else if (option == 'true') {
         options[1].setAttribute('selected', 'selected')
     }
 }
@@ -49,7 +57,9 @@ const search = document.getElementById('search')
 search.onkeyup = ({ target: { value } }) => {
     window.state = {
         ...window.state,
-        search: value
+        search: value,
+        currentPage: 1,
+        currentArray: 0
     }
 
     removeContactsList()
@@ -57,7 +67,7 @@ search.onkeyup = ({ target: { value } }) => {
 
 }
 const searchDropdown = document.getElementById('search-dropdown')
-searchDropdown.onkeyup= ({ target: { value } }) => {
+searchDropdown.onkeyup = ({ target: { value } }) => {
     window.state = {
         ...window.state,
         search: value
@@ -70,4 +80,4 @@ searchDropdown.onkeyup= ({ target: { value } }) => {
 //retorna um array com os contatos favoritos
 const filterContacts = (obj) => obj.isFavorite;
 
-export{ searchContacts, filterContacts, modifyFilterSelect}
+export { searchContacts, filterContacts, modifyFilterSelect }
