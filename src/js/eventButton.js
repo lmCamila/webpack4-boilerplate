@@ -20,6 +20,7 @@ btnNew.onclick = () => {
     divShadow.style.display = 'block'
     titulo.innerHTML = 'Novo Contato';
     modal.setAttribute('data-modo', 'new')
+    document.getElementById('form-new-edit').reset()
 }
 span.onclick = () => {
     modal.style.display = 'none';
@@ -68,6 +69,7 @@ btnEnviar.onclick = () => {
 
     //verifica modo da modal e faz requisição
     if (modal.dataset.modo == 'new') {
+     
         msgSuccess = "Contato cadastrado com sucesso"
         sendNew(body).then((res) => {
             if (res.status == 201) {
@@ -76,11 +78,13 @@ btnEnviar.onclick = () => {
                     verifySize()
                     searchContacts()
                 })
+                modal.style.display = 'none';
+                divShadow.style.display = 'none'
             } else if (res.status == 400) {
                 alert('Erro, não foi possivel concluir essa ação.')
+                modal.style.display = 'none';
+                divShadow.style.display = 'none'
             }
-            modal.style.display = 'none';
-            divShadow.style.display = 'none'
         })
     } else if (modal.dataset.modo == 'edit') {
         msgSuccess = "Contato alterado com sucesso"
@@ -93,12 +97,15 @@ btnEnviar.onclick = () => {
                     removeContactsList()
                     verifySize()
                     alert(msgSuccess)
+                    modal.style.display = 'none';
+                    divShadow.style.display = 'none'
                 })
             } else if (res.status == 400) {
                 alert('Erro, não foi possivel concluir essa ação.')
-            }
-            modal.style.display = 'none';
+                modal.style.display = 'none';
             divShadow.style.display = 'none'
+            }
+            
         })
     }
 

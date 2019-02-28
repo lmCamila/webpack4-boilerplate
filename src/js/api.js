@@ -64,9 +64,8 @@ const sendNew = async (body) => {
         },
         body: body
     }
-    const response = await fetch(`http://contacts-api.azurewebsites.net/api/contacts`, fetchConf)
+    const response = await fetch('http://contacts-api.azurewebsites.net/api/contacts', fetchConf)
     return response
-    
 }
 
 //envia requisição para deletar contato
