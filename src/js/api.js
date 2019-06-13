@@ -4,7 +4,7 @@ import{ verifyLoader } from './view.js'
 
 //carrega os contatos da api
 const loadContacts = async () => {
-    const response = await fetch('http://contacts-api.azurewebsites.net/api/contacts');
+    const response = await fetch('http://localhost:3000/contatos');
     const data = await response.json();
     window.state = {
         ...window.state,
